@@ -62,6 +62,10 @@ evolução prevista — ver §7.
 ## 3. Stack e comandos
 
 - **Vite** + **React 19**, JavaScript puro (sem TypeScript), ES modules.
+- **Versões fixadas exatas** no `package.json` (React 19.3.0, React-DOM 19.3.0, Vite 8.3.0,
+  `@vitejs/plugin-react` 6.1.1) — sem `^` e sem `latest`. Num projeto sem testes, um salto de
+  major silencioso só apareceria em runtime. Atualizar é ato deliberado: mude a versão e
+  verifique. Não afrouxe para faixas sem combinar.
 - Sem testes, sem linter, sem formatter configurados.
 - **`vite.config.js`** carrega o `@vitejs/plugin-react`, o que habilita **Fast Refresh**:
   ao editar um componente, o estado dos sliders do laboratório é preservado em vez de a
