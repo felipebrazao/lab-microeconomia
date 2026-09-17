@@ -918,6 +918,67 @@ footer b {
 }
 
 /* ================================================================== */
+/* Laboratório — abas de navegação entre eixos                        */
+/* ================================================================== */
+.lab-tabs {
+  max-width: 1120px;
+  margin: 0 auto 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.lab-tab {
+  flex: 1;
+  border: 1px solid var(--mint);
+  background: transparent;
+  color: var(--mint);
+  opacity: .55;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: .2s;
+}
+
+.lab-tab:hover:not(:disabled):not(.ativa) {
+  opacity: .8;
+}
+
+.lab-tab.ativa {
+  background: var(--mint);
+  color: var(--ink);
+  opacity: 1;
+}
+
+.lab-tab:disabled {
+  opacity: .28;
+  cursor: not-allowed;
+}
+
+.tab-numero {
+  font: 10px 'DM Mono', monospace;
+  letter-spacing: .08em;
+  color: var(--coral);
+}
+
+.lab-tab.ativa .tab-numero {
+  color: var(--teal);
+}
+
+.tab-breve {
+  margin-left: auto;
+  font: 9px 'DM Mono', monospace;
+  letter-spacing: .06em;
+}
+
+.lab-painel.oculto {
+  display: none;
+}
+
+/* ================================================================== */
 /* Laboratório — elementos do gráfico de equilíbrio                   */
 /* ================================================================== */
 .tick-text {
@@ -982,4 +1043,16 @@ footer b {
 .ajustar:disabled {
   opacity: .4;
   cursor: not-allowed;
+}
+
+@media (max-width: 850px) {
+  .lab-tabs {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 560px) {
+  .lab-tabs {
+    padding: 0 8vw;
+  }
 }
