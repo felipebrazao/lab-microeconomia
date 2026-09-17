@@ -1,0 +1,22 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Ferramentas do assistente
+.claude/
+
+# Editor / SO
+.DS_Store
+.vscode/
+.idea/
