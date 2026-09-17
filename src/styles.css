@@ -916,3 +916,70 @@ footer b {
     margin: 20px 5vw 0;
   }
 }
+
+/* ================================================================== */
+/* Laboratório — elementos do gráfico de equilíbrio                   */
+/* ================================================================== */
+.tick-text {
+  font: 9px 'DM Mono', monospace;
+  fill: var(--muted);
+}
+
+/* Posição anterior da curva, mantida na tela para o deslocamento ficar visível. */
+.ghost-line {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  opacity: .45;
+}
+
+.ghost-demand {
+  stroke: var(--coral);
+}
+
+.ghost-supply {
+  stroke: var(--blue);
+}
+
+.guide-line {
+  stroke: var(--teal);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  opacity: .5;
+}
+
+.equilibrium-dot {
+  fill: var(--teal);
+  stroke: var(--paper);
+  stroke-width: 2;
+}
+
+.equilibrium-text {
+  font: 11px 'DM Mono', monospace;
+  font-weight: 500;
+  fill: var(--teal);
+}
+
+/* Faixa entre quantidade demandada e ofertada ao preço praticado. */
+.gap-band {
+  stroke: var(--teal);
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: .32;
+}
+
+.gap-tick {
+  stroke: var(--teal);
+  stroke-width: 1.5;
+}
+
+.ajustar {
+  margin: -8px 0 6px;
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.ajustar:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
