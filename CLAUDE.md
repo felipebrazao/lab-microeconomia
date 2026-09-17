@@ -50,12 +50,16 @@ sua visualização e sua leitura de cenário.
 | # | Eixo | Estado | Escopo |
 |---|------|--------|--------|
 | 1 | **Produtos substitutos e complementares** | Implementação inicial, em evolução | Efeito do preço de um bem relacionado sobre a demanda do bem analisado; deslocamento (não movimento) da curva |
-| 2 | **Equilíbrio de mercado** | A construir | Encontro de oferta e demanda; escassez e excesso; ajuste até o novo equilíbrio após um choque |
+| 2 | **Equilíbrio de mercado** | Implementado | Encontro de oferta e demanda; escassez e excesso; ajuste até o novo equilíbrio após um choque |
 | 3 | **Elasticidades** | A construir | Elasticidade-preço da demanda e da oferta, elasticidade-renda, elasticidade-cruzada; relação com receita total |
 
-Hoje o eixo 1 está **embutido** no lab de oferta/demanda de `main.jsx` (sliders "Preço do
-substituto" e "Preço do complementar"), não isolado como lab próprio. Separá-lo é parte da
-evolução prevista — ver §7.
+O eixo 1 já é um módulo próprio (`labs/substitutos.jsx`), mas continua sendo o lab completo
+de oferta/demanda com os sliders de substituto e complementar entre outros. Reduzi-lo ao seu
+tema específico ainda está pendente — ver `TODO.md`.
+
+Os três eixos compartilham o mesmo mercado (café) e as mesmas curvas, vindas de
+`shared/modelo.js`. É intencional: o aluno reconhece o mesmo mercado em cada lab e só o
+recorte muda.
 
 ---
 
@@ -81,35 +85,35 @@ npm run preview  # serve o build
 
 ## 4. Estrutura do código
 
-**Hoje:**
-
 ```
-index.html        # shell HTML, fontes do Google (Manrope, Playfair Display, DM Mono)
-vite.config.js    # plugin do React (Fast Refresh)
-src/main.jsx      # TUDO: componente App, dados dos conceitos, modelo econômico, SVG
-src/styles.css    # folha de estilo única, ~918 linhas, seccionada por comentários
-```
-
-**Alvo — um módulo por eixo, com camada compartilhada:**
-
-```
+index.html              # shell HTML, fontes do Google (Manrope, Playfair Display, DM Mono)
+vite.config.js          # plugin do React (Fast Refresh)
+.claude/launch.json     # dev server do preview (local, fora do versionamento)
 src/
-  main.jsx              # só casca: layout da página, navegação entre eixos
+  main.jsx              # casca: layout da página e navegação por abas entre eixos
+  styles.css            # folha de estilo única, ~1058 linhas, seccionada por comentários
   labs/
     substitutos.jsx     # eixo 1
     equilibrio.jsx      # eixo 2
-    elasticidades.jsx   # eixo 3
+    elasticidades.jsx   # eixo 3 — a construir
   shared/
-    Slider.jsx          # controles reutilizáveis
-    Chart.jsx           # gráfico SVG, eixos, gridlines, escalas
-    modelo.js           # funções do modelo econômico (curvas, equilíbrio, elasticidade)
+    Slider.jsx          # controle de faixa reutilizável
+    Chart.jsx           # diagrama de Marshall: eixos, gridlines, escalas, curvas
+    modelo.js           # curvas, equilíbrio, folga e dinâmica de ajuste
+    formato.js          # formatação numérica pt-BR
 ```
+
+**Navegação e estado.** `main.jsx` mantém todos os labs montados e esconde os inativos com
+`.lab-painel.oculto`. É o que preserva o cenário de cada eixo quando o aluno alterna de aba —
+desmontar zeraria os sliders. O botão do desafio troca a `key` do lab do eixo 1 para remontá-lo
+com um cenário pronto, sem estado global e sem o lab precisar saber que o desafio existe.
 
 Regra: **nenhum lab reimplementa o que já está em `shared/`.** Se dois eixos precisam da
 mesma curva ou do mesmo gráfico, a lógica sobe para `shared/` — não é copiada.
 
-A migração para essa estrutura acontece de forma incremental, conforme cada eixo é
-construído. Não refatore tudo de uma vez sem combinar antes.
+O eixo 3 entra como mais um módulo em `labs/`, consumindo `shared/` — sem refatoração de
+estrutura. Se ele precisar de algo que `shared/` ainda não oferece, o certo é ampliar
+`shared/`, não criar uma variante local.
 
 ---
 
@@ -133,6 +137,11 @@ construído. Não refatore tudo de uma vez sem combinar antes.
 - Cálculos derivados em `useMemo`, com o array de dependências completo.
 - Sem bibliotecas de gráfico: as visualizações são **SVG escrito à mão**. É intencional —
   mantém o controle sobre o traço e evita peso de dependência.
+- **Diagrama de Marshall: preço na vertical, quantidade na horizontal.** É a convenção de
+  livro-texto, e o aluno precisa ver aqui o mesmo desenho que vê na aula. `shared/Chart.jsx`
+  já nasce assim; nenhum lab deve inverter os eixos.
+- A **escala de quantidade do gráfico é fixa**, não ajustada aos dados. Com escala móvel, um
+  deslocamento de curva ficaria invisível — o eixo se reajustaria embaixo da curva.
 
 **Estilo / UI**
 
@@ -175,13 +184,23 @@ automática** (§1.1).
 
 ## 7. Estado atual e pendências
 
-Pendências:
-
-- [ ] **Migrar para `labs/` + `shared/`** conforme os eixos 2 e 3 forem construídos.
-- [ ] **Isolar o eixo 1** em lab próprio, hoje embutido no lab de oferta/demanda.
+**Pendências abertas ficam em [`TODO.md`](TODO.md)**, não aqui. Este arquivo guarda
+convenções e o histórico do que já foi resolvido; a lista de trabalho mora lá, em um lugar
+só. Ao concluir um item do `TODO.md`, remova-o de lá e registre aqui embaixo se a conclusão
+deixar alguma lição que valha carregar.
 
 Já resolvido:
 
+- [x] **Eixo 2 construído** — `labs/equilibrio.jsx`, com folga entre Qd e Qs ao preço
+      praticado, ponto de equilíbrio no gráfico e ajuste animado até o novo equilíbrio.
+- [x] **Camada `shared/` criada** e consumida pelos dois labs existentes: `modelo.js`,
+      `Chart.jsx`, `Slider.jsx`, `formato.js`.
+- [x] **Eixos do gráfico corrigidos** — o lab original traçava preço na horizontal e
+      quantidade na vertical, mas rotulava os eixos ao contrário (`.axis-y` dizia "PREÇO"
+      sobre um eixo que mostrava quantidade). Como a demanda desce nas duas orientações, o
+      desenho parecia certo e só as leituras de valor saíam transpostas. Agora é Marshall:
+      preço na vertical, quantidade na horizontal, e os rótulos existentes passaram a
+      corresponder ao que é plotado.
 - [x] **`.gitignore`** — `node_modules/` e `dist/` estavam versionados; removidos do índice
       com `git rm -r --cached` (arquivos preservados no disco).
 - [x] **`src/styles.css` expandido** — de 1 linha minificada (9,4 KB) para 918 linhas
@@ -190,8 +209,9 @@ Já resolvido:
       Nenhuma regra de estilo foi alterada — o CSS compilado pelo Vite ficou **byte a byte
       idêntico** ao do build anterior (mesmo sha256, mesmo hash de nome de arquivo).
 - [x] **`vite.config.js` criado** — habilita Fast Refresh no dev. Verificado: build de
-      produção emite CSS e JS com os mesmos hashes de antes (`index-CGsELB_C.css`,
-      `index-DmjvtJI1.js`), ou seja, impacto zero em produção.
+      produção emitiu CSS e JS com os mesmos hashes de antes da mudança, ou seja, impacto
+      zero em produção. (Os hashes daquele momento não valem para o build de hoje — o código
+      mudou desde então; o que fica registrado é o resultado da comparação.)
 - [x] **Build consertado** — `npm run build` e `npm run dev` estavam quebrados porque o
       `node_modules/` versionado vinha de uma máquina Windows: o `.bin/vite` estava sem bit
       de execução e só havia bindings nativos win32 de `rolldown` e `lightningcss`. Resolvido
@@ -200,9 +220,4 @@ Já resolvido:
 Se o build voltar a falhar com `Permission denied` no `.bin/vite` ou com erro de carga de
 binding nativo, a causa é essa e a correção é reinstalar do zero.
 
-Outras observações:
-
-- Não há CI, nem deploy configurado.
-- O CSS usa bastante hex solto fora dos tokens de `:root` (`#53666a`, `#647476`, `#5d6c6e`…).
-  Consolidar em variáveis é uma melhoria possível, mas envolve decisão de design — combine
-  antes de mexer.
+Ausências conhecidas: não há CI, deploy, testes nem linter — ver `TODO.md`.
