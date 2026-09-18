@@ -4,13 +4,14 @@ Laboratório interativo de **microeconomia**. Cada conceito vira um experimento 
 o aluno move controles, vê as curvas e as métricas responderem na hora, e lê uma
 interpretação em texto do cenário que acabou de criar.
 
-Três eixos de conteúdo:
+Acompanha a ementa de Microeconomia até **Estruturas de Mercado**. Hoje há laboratório para:
 
-1. **Produtos substitutos e complementares** — como o preço de um bem relacionado desloca a
-   demanda do bem analisado
-2. **Equilíbrio de mercado** — onde oferta e demanda se encontram, o que acontece fora desse
-   ponto, e como o preço caminha de volta
-3. **Elasticidades** — *a construir*
+- **Demanda e oferta** — como renda e o preço de bens relacionados deslocam a curva
+- **Equilíbrio de mercado** — onde oferta e demanda se encontram, o que acontece fora desse
+  ponto, e como o preço caminha de volta
+
+Os demais temas — custo de oportunidade, teoria do consumidor, elasticidades e estruturas de
+mercado — estão mapeados em [docs/](docs/README.md), com o que falta em cada um.
 
 ---
 

@@ -13,25 +13,46 @@ const concepts = [
   { number: '04', title: 'Renda e relações', text: 'Renda desloca a demanda de bens normais. Substitutos competem entre si; complementares são consumidos em conjunto.', tag: 'Fatores externos' },
 ]
 
-const EIXOS = [
+// Os temas seguem a ordem da ementa — a mesma em que são dados em aula. Os que
+// ainda não têm laboratório aparecem mesmo assim, desabilitados: o aluno precisa
+// enxergar onde o que está manipulando se encaixa no curso inteiro.
+const TEMAS = [
   {
-    id: 'substitutos',
+    id: 'custo-oportunidade',
     numero: '01',
-    aba: 'Substitutos e complementares',
+    aba: 'Custo de oportunidade',
+    emBreve: true,
+  },
+  {
+    id: 'consumidor',
+    numero: '02',
+    aba: 'Teoria do consumidor',
+    emBreve: true,
+  },
+  {
+    id: 'demanda-oferta',
+    numero: '03',
+    aba: 'Demanda e oferta',
     titulo: <>Faça o mercado<br /><em>se mover.</em></>,
     descricao: 'Escolha um preço e altere as condições. Observe como as curvas respondem e encontre o novo ponto de equilíbrio.',
   },
   {
     id: 'equilibrio',
-    numero: '02',
+    numero: '04',
     aba: 'Equilíbrio de mercado',
     titulo: <>Quando falta,<br /><em>quando sobra.</em></>,
     descricao: 'A um preço qualquer, oferta e demanda raramente coincidem. Veja o tamanho da diferença e para onde ela empurra o preço.',
   },
   {
     id: 'elasticidades',
-    numero: '03',
+    numero: '05',
     aba: 'Elasticidades',
+    emBreve: true,
+  },
+  {
+    id: 'estruturas',
+    numero: '06',
+    aba: 'Estruturas de mercado',
     emBreve: true,
   },
 ]
@@ -40,20 +61,20 @@ const EIXOS = [
 const PRECO_BASE = equilibrio().preco
 
 function App() {
-  const [aba, setAba] = useState('substitutos')
+  const [aba, setAba] = useState('demanda-oferta')
   const [briefDone, setBriefDone] = useState(false)
-  // O desafio recarrega o eixo 1 com um cenário pronto. Trocar a chave remonta o
+  // O desafio recarrega o lab de demanda e oferta com um cenário pronto. Trocar a chave remonta o
   // lab, que é exatamente o que "carregar um cenário" significa: começar de novo
   // a partir dali, sem estado global e sem o lab precisar saber do desafio.
   const [cenarioDesafio, setCenarioDesafio] = useState(undefined)
   const [chaveDesafio, setChaveDesafio] = useState(0)
 
-  const eixoAtivo = EIXOS.find(e => e.id === aba)
+  const temaAtivo = TEMAS.find(t => t.id === aba)
 
   const carregarDesafio = () => {
     setCenarioDesafio({ preco: 36, renda: 20, substituto: 15, complementar: 0, producao: 0 })
     setChaveDesafio(c => c + 1)
-    setAba('substitutos')
+    setAba('demanda-oferta')
     document.getElementById('lab').scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -95,28 +116,28 @@ function App() {
       <div className="lab-heading">
         <div>
           <p className="eyebrow">LABORATÓRIO PRÁTICO</p>
-          <h2>{eixoAtivo.titulo}</h2>
+          <h2>{temaAtivo.titulo}</h2>
         </div>
-        <p>{eixoAtivo.descricao}</p>
+        <p>{temaAtivo.descricao}</p>
       </div>
 
-      <nav className="lab-tabs" aria-label="Eixos do laboratório">
-        {EIXOS.map(eixo => (
+      <nav className="lab-tabs" aria-label="Temas da disciplina">
+        {TEMAS.map(tema => (
           <button
-            key={eixo.id}
-            className={`lab-tab ${aba === eixo.id ? 'ativa' : ''}`}
-            onClick={() => setAba(eixo.id)}
-            disabled={eixo.emBreve}
-            aria-current={aba === eixo.id ? 'page' : undefined}
+            key={tema.id}
+            className={`lab-tab ${aba === tema.id ? 'ativa' : ''}`}
+            onClick={() => setAba(tema.id)}
+            disabled={tema.emBreve}
+            aria-current={aba === tema.id ? 'page' : undefined}
           >
-            <span className="tab-numero">{eixo.numero}</span>
-            {eixo.aba}
-            {eixo.emBreve && <span className="tab-breve">em breve</span>}
+            <span className="tab-numero">{tema.numero}</span>
+            {tema.aba}
+            {tema.emBreve && <span className="tab-breve">em breve</span>}
           </button>
         ))}
       </nav>
 
-      <div className={aba === 'substitutos' ? 'lab-painel' : 'lab-painel oculto'}>
+      <div className={aba === 'demanda-oferta' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabSubstitutos key={chaveDesafio} inicial={cenarioDesafio} />
       </div>
       <div className={aba === 'equilibrio' ? 'lab-painel' : 'lab-painel oculto'}>

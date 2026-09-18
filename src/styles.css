@@ -924,11 +924,12 @@ footer b {
   max-width: 1120px;
   margin: 0 auto 20px;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .lab-tab {
-  flex: 1;
+  flex: 1 1 320px;
   border: 1px solid var(--mint);
   background: transparent;
   color: var(--mint);
@@ -1046,13 +1047,17 @@ footer b {
 }
 
 @media (max-width: 850px) {
-  .lab-tabs {
-    flex-direction: column;
+  .lab-tab {
+    flex-basis: 45%;
   }
 }
 
 @media (max-width: 560px) {
   .lab-tabs {
     padding: 0 8vw;
+  }
+
+  .lab-tab {
+    flex-basis: 100%;
   }
 }
