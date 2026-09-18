@@ -42,24 +42,31 @@ Perguntar custa uma mensagem. Refazer trabalho errado custa muito mais.
 
 ---
 
-## 2. Os três eixos de conteúdo
+## 2. Conteúdo da disciplina
 
-O projeto se organiza em três eixos. Cada um é um laboratório próprio, com seus controles,
-sua visualização e sua leitura de cenário.
+O projeto acompanha a ementa de Microeconomia **até Estruturas de Mercado**, na sequência em
+que os temas são dados em aula. Nem todo tema vira laboratório — alguns são conceituais e não
+se manipulam bem com sliders.
 
-| # | Eixo | Estado | Escopo |
-|---|------|--------|--------|
-| 1 | **Produtos substitutos e complementares** | Implementação inicial, em evolução | Efeito do preço de um bem relacionado sobre a demanda do bem analisado; deslocamento (não movimento) da curva |
-| 2 | **Equilíbrio de mercado** | Implementado | Encontro de oferta e demanda; escassez e excesso; ajuste até o novo equilíbrio após um choque |
-| 3 | **Elasticidades** | A construir | Elasticidade-preço da demanda e da oferta, elasticidade-renda, elasticidade-cruzada; relação com receita total |
+| # | Tema | Lab | Estado |
+|---|------|-----|--------|
+| 1 | Custo de oportunidade | — | Conceitual; formato a definir |
+| 2 | Teoria do consumidor | — | A construir |
+| 3 | Demanda e oferta | `labs/substitutos.jsx` | Parcial — ver lacunas na nota do tema |
+| 4 | Equilíbrio de mercado | `labs/equilibrio.jsx` | Implementado |
+| 5 | Elasticidades | — | A construir |
+| 6 | Estruturas de mercado | — | Formato provavelmente não é diagrama de Marshall |
 
-O eixo 1 já é um módulo próprio (`labs/substitutos.jsx`), mas continua sendo o lab completo
-de oferta/demanda com os sliders de substituto e complementar entre outros. Reduzi-lo ao seu
-tema específico ainda está pendente — ver `TODO.md`.
+**As notas de conteúdo de cada tema estão em [`docs/`](docs/README.md)** — conceitos, notação
+e, ao final de cada nota, o que o lab correspondente já cobre e o que ainda não. É de lá que
+saem os itens de conteúdo do `TODO.md`. Antes de construir ou evoluir um lab, leia a nota do
+tema: ela é a fonte sobre o recorte que a aula exige.
 
-Os três eixos compartilham o mesmo mercado (café) e as mesmas curvas, vindas de
-`shared/modelo.js`. É intencional: o aluno reconhece o mesmo mercado em cada lab e só o
-recorte muda.
+As notas são texto próprio, em termos genéricos de microeconomia. Os slides da disciplina são
+material do professor e **não são redistribuídos neste repositório**.
+
+Os labs compartilham o mesmo mercado (café) e as mesmas curvas, vindas de `shared/modelo.js`.
+É intencional: o aluno reconhece o mesmo mercado em cada lab e só o recorte muda.
 
 ---
 
@@ -93,9 +100,9 @@ src/
   main.jsx              # casca: layout da página e navegação por abas entre eixos
   styles.css            # folha de estilo única, ~1058 linhas, seccionada por comentários
   labs/
-    substitutos.jsx     # eixo 1
-    equilibrio.jsx      # eixo 2
-    elasticidades.jsx   # eixo 3 — a construir
+    substitutos.jsx     # tema 3 — demanda e oferta
+    equilibrio.jsx      # tema 4 — equilíbrio de mercado
+    elasticidades.jsx   # tema 5 — elasticidades (a construir)
   shared/
     Slider.jsx          # controle de faixa reutilizável
     Chart.jsx           # diagrama de Marshall: eixos, gridlines, escalas, curvas
@@ -105,13 +112,13 @@ src/
 
 **Navegação e estado.** `main.jsx` mantém todos os labs montados e esconde os inativos com
 `.lab-painel.oculto`. É o que preserva o cenário de cada eixo quando o aluno alterna de aba —
-desmontar zeraria os sliders. O botão do desafio troca a `key` do lab do eixo 1 para remontá-lo
+desmontar zeraria os sliders. O botão do desafio troca a `key` do lab de demanda e oferta para remontá-lo
 com um cenário pronto, sem estado global e sem o lab precisar saber que o desafio existe.
 
 Regra: **nenhum lab reimplementa o que já está em `shared/`.** Se dois eixos precisam da
 mesma curva ou do mesmo gráfico, a lógica sobe para `shared/` — não é copiada.
 
-O eixo 3 entra como mais um módulo em `labs/`, consumindo `shared/` — sem refatoração de
+Cada tema novo entra como mais um módulo em `labs/`, consumindo `shared/` — sem refatoração de
 estrutura. Se ele precisar de algo que `shared/` ainda não oferece, o certo é ampliar
 `shared/`, não criar uma variante local.
 

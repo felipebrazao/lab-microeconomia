@@ -10,7 +10,32 @@ conversa que o originou.
 
 ## Conteúdo
 
-### Eixo 3 — Elasticidades
+### Cobrir bens inferiores e saciados
+`docs/conteudo/03-demanda-e-oferta.md` registra a lacuna: o modelo em `shared/modelo.js` só
+tem bem normal (renda ↑ → demanda ↑). A ementa trata as duas exceções — bens saciados, em que
+mais renda não muda o consumo, e bens inferiores, em que a demanda **cai** quando a renda
+sobe.
+
+É também pré-requisito do tema 5: a elasticidade-renda negativa é justamente o que define bem
+inferior, e sem modelar o caso o lab de elasticidades não consegue mostrá-lo.
+
+### Cenários prontos de choque no lab de equilíbrio
+`docs/conteudo/04-equilibrio-de-mercado.md` lista os quatro casos (oferta/demanda × aumenta/
+diminui). Hoje o aluno monta cada um no slider; botões de cenário deixariam a comparação
+entre os quatro imediata.
+
+### Lab de teoria do consumidor (tema 2)
+Utilidade marginal decrescente → preço marginal de reserva → equilíbrio do consumidor →
+excedente do consumidor. Segundo `docs/conteudo/02-teoria-do-consumidor.md`, é o tema que
+melhor se encaixa no formato de sliders depois de elasticidades — e explica *de onde vem* a
+curva de demanda que os outros labs usam pronta.
+
+### Formato para custo de oportunidade (tema 1) e estruturas de mercado (tema 6)
+Nenhum dos dois é diagrama de Marshall. Custo de oportunidade é decisão sob restrição;
+estruturas de mercado é classificação. Decidir o formato antes de codar qualquer coisa — ver
+as notas dos dois temas em `docs/conteudo/`.
+
+### Lab de elasticidades (tema 5)
 A aba já existe em `src/main.jsx` (`EIXOS`, entrada `elasticidades`), desabilitada e
 marcada "em breve". Falta o lab.
 
@@ -21,10 +46,10 @@ Entra como `src/labs/elasticidades.jsx` consumindo `shared/` — sem refatoraç�
 estrutura. As elasticidades saem das curvas que já existem em `shared/modelo.js`; se
 algo faltar lá, o certo é ampliar `shared/`, não criar variante local.
 
-### Estreitar o eixo 1 ao seu tema
+### Estreitar o lab de demanda e oferta ao seu tema
 `src/labs/substitutos.jsx` já é módulo próprio, mas segue sendo o lab completo de
 oferta e demanda: o recorte de substitutos e complementares divide espaço com renda e
-condições de produção. Com o eixo 2 cobrindo equilíbrio, essa sobreposição ficou
+condições de produção. Com o lab de equilíbrio cobrindo aquele tema, a sobreposição ficou
 redundante.
 
 Decidir o que sai dele e o que fica é decisão de conteúdo didático — combinar antes.
@@ -96,7 +121,7 @@ Os dois labs repetem ~35 linhas de JSX estruturalmente equivalente: `market-head
 faixa `insight`. Cada bloco aparece uma vez em `labs/substitutos.jsx` e uma vez em
 `labs/equilibrio.jsx`.
 
-O eixo 3 seria a terceira cópia — e é o momento natural para resolver: só com três casos
+Um terceiro lab seria a terceira cópia — e é o momento natural para resolver: só com três casos
 fica visível o que é mesmo comum e o que é específico de cada lab. Extrair agora, com dois
 exemplos, arrisca desenhar a abstração errada.
 
