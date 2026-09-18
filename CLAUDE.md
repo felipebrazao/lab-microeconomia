@@ -46,7 +46,8 @@ Perguntar custa uma mensagem. Refazer trabalho errado custa muito mais.
 
 O projeto acompanha a ementa de Microeconomia **até Estruturas de Mercado**, na sequência em
 que os temas são dados em aula. Nem todo tema vira laboratório — alguns são conceituais e não
-se manipulam bem com sliders.
+se manipulam bem com sliders. **Todos os seis aparecem como aba**, mesmo sem lab: o aluno
+precisa enxergar onde o que está manipulando se encaixa no curso inteiro.
 
 | # | Tema | Lab | Estado |
 |---|------|-----|--------|
@@ -110,8 +111,9 @@ src/
     formato.js          # formatação numérica pt-BR
 ```
 
-**Navegação e estado.** `main.jsx` mantém todos os labs montados e esconde os inativos com
-`.lab-painel.oculto`. É o que preserva o cenário de cada eixo quando o aluno alterna de aba —
+**Navegação e estado.** As abas seguem a ordem da ementa (`TEMAS` em `main.jsx`), numeradas
+de 01 a 06; as sem laboratório ficam desabilitadas e marcadas "em breve". `main.jsx` mantém
+todos os labs montados e esconde os inativos com `.lab-painel.oculto`. É o que preserva o cenário de cada eixo quando o aluno alterna de aba —
 desmontar zeraria os sliders. O botão do desafio troca a `key` do lab de demanda e oferta para remontá-lo
 com um cenário pronto, sem estado global e sem o lab precisar saber que o desafio existe.
 
