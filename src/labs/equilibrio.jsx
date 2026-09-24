@@ -49,7 +49,7 @@ const SECOES = [
   { id: 'desafio', numero: '4.2', titulo: 'Desafio' },
 ]
 
-export default function LabEquilibrio() {
+export default function LabEquilibrio({ abrirDesafio = 0 }) {
   const [preco, setPreco] = useState(PRECO_INICIAL)
   const [choqueDemanda, setChoqueDemanda] = useState(0)
   const [choqueOferta, setChoqueOferta] = useState(0)
@@ -132,6 +132,14 @@ export default function LabEquilibrio() {
     setSecao(id)
     if (id !== 'conceito') setLabVisitado(true)
   }
+
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
 
   return (
     <>

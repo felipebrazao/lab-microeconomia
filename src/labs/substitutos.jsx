@@ -32,13 +32,13 @@ const LEITURA = {
   equilibrio: { rotulo: 'Equilíbrio', texto: 'Oferta e demanda estão praticamente alinhadas.', cor: 'mint' },
 }
 
-export default function LabSubstitutos({ inicial = CENARIO_PADRAO }) {
-  const [preco, setPreco] = useState(inicial.preco)
-  const [renda, setRenda] = useState(inicial.renda)
-  const [substituto, setSubstituto] = useState(inicial.substituto)
-  const [complementar, setComplementar] = useState(inicial.complementar)
-  const [producao, setProducao] = useState(inicial.producao)
-  const [tipoBem, setTipoBem] = useState(inicial.tipoBem ?? 'normal')
+export default function LabSubstitutos({ abrirDesafio = 0 }) {
+  const [preco, setPreco] = useState(CENARIO_PADRAO.preco)
+  const [renda, setRenda] = useState(CENARIO_PADRAO.renda)
+  const [substituto, setSubstituto] = useState(CENARIO_PADRAO.substituto)
+  const [complementar, setComplementar] = useState(CENARIO_PADRAO.complementar)
+  const [producao, setProducao] = useState(CENARIO_PADRAO.producao)
+  const [tipoBem, setTipoBem] = useState(CENARIO_PADRAO.tipoBem)
   const [secao, setSecao] = useState('conceito')
   const [conceitoLido, setConceitoLido] = usePersistido('microlab:demanda-oferta:conceito', false)
   const [labVisitado, setLabVisitado] = usePersistido('microlab:demanda-oferta:lab', false)
@@ -87,6 +87,14 @@ export default function LabSubstitutos({ inicial = CENARIO_PADRAO }) {
     setSecao(id)
     if (id !== 'conceito') setLabVisitado(true)
   }
+
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
 
   const leitura = LEITURA[mercado.tipo]
 

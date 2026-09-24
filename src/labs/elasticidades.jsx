@@ -64,7 +64,7 @@ function Barra({ rotulo, valor }) {
   )
 }
 
-export default function LabElasticidades() {
+export default function LabElasticidades({ abrirDesafio = 0 }) {
   const [medida, setMedida] = useState('preco')
   const [tipoBem, setTipoBem] = useState('normal')
   const [variacaoRenda, setVariacaoRenda] = useState(20)
@@ -113,6 +113,14 @@ export default function LabElasticidades() {
     setSecao(id)
     if (id !== 'conceito') setLabVisitado(true)
   }
+
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
 
   return (
     <>

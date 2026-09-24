@@ -14,7 +14,7 @@ const SECOES = [
 const ROTULO = { um: 'Um', poucos: 'Poucos', muitos: 'Muitos' }
 const OPCOES = Object.keys(ESTRUTURAS)
 
-export default function LabEstruturas() {
+export default function LabEstruturas({ abrirDesafio = 0 }) {
   const [vendedores, setVendedores] = useState('muitos')
   const [compradores, setCompradores] = useState('muitos')
   const [diferenciado, setDiferenciado] = useState(false)
@@ -47,6 +47,14 @@ export default function LabEstruturas() {
     setSecao(id)
     if (id !== 'conceito') setLabVisitado(true)
   }
+
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
 
   return (
     <>

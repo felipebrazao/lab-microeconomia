@@ -17,7 +17,7 @@ const SECOES = [
   { id: 'desafio', numero: '1.2', titulo: 'Desafio' },
 ]
 
-export default function LabOportunidade() {
+export default function LabOportunidade({ abrirDesafio = 0 }) {
   const [alternativas, setAlternativas] = useState(ALTERNATIVAS_PADRAO)
   const [escolhidaId, setEscolhidaId] = useState('loja')
   const [secao, setSecao] = useState('conceito')
@@ -57,6 +57,14 @@ export default function LabOportunidade() {
     setSecao(id)
     if (id !== 'conceito') setLabVisitado(true)
   }
+
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
 
   return (
     <>

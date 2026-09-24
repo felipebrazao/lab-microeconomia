@@ -21,7 +21,7 @@ const SECOES = [
 const ALTURA_DEGRAU = 150
 const UTILIDADE_MAX = 24
 
-export default function LabConsumidor() {
+export default function LabConsumidor({ abrirDesafio = 0 }) {
   const [utilidades, setUtilidades] = useState(UTILIDADES_PADRAO)
   const [precoMercado, setPrecoMercado] = useState(PRECO_INICIAL)
   const [secao, setSecao] = useState('conceito')
@@ -61,6 +61,14 @@ export default function LabConsumidor() {
     setSecao(id)
     if (id !== 'conceito') setLabVisitado(true)
   }
+
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
 
   return (
     <>
