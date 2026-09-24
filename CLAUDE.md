@@ -45,18 +45,17 @@ Perguntar custa uma mensagem. Refazer trabalho errado custa muito mais.
 ## 2. Conteúdo da disciplina
 
 O projeto acompanha a ementa de Microeconomia **até Estruturas de Mercado**, na sequência em
-que os temas são dados em aula. Nem todo tema vira laboratório — alguns são conceituais e não
-se manipulam bem com sliders. **Todos os seis aparecem como aba**, mesmo sem lab: o aluno
+que os temas são dados em aula. Os seis temas têm laboratório. **Todos aparecem como aba**, mesmo sem lab: o aluno
 precisa enxergar onde o que está manipulando se encaixa no curso inteiro.
 
 | # | Tema | Lab | Estado |
 |---|------|-----|--------|
-| 1 | Custo de oportunidade | — | Conceitual; formato a definir |
+| 1 | Custo de oportunidade | `labs/oportunidade.jsx` | Implementado |
 | 2 | Teoria do consumidor | `labs/consumidor.jsx` | Implementado |
 | 3 | Demanda e oferta | `labs/substitutos.jsx` | Formato completo; modelo ainda sem bens inferiores e saciados |
 | 4 | Equilíbrio de mercado | `labs/equilibrio.jsx` | Implementado |
 | 5 | Elasticidades | `labs/elasticidades.jsx` | Implementado |
-| 6 | Estruturas de mercado | — | Formato provavelmente não é diagrama de Marshall |
+| 6 | Estruturas de mercado | `labs/estruturas.jsx` | Implementado |
 
 **As notas de conteúdo de cada tema estão em [`docs/`](docs/README.md)** — conceitos, notação
 e, ao final de cada nota, o que o lab correspondente já cobre e o que ainda não. É de lá que
@@ -103,6 +102,9 @@ src/
   main.jsx              # casca: layout da página e navegação por abas entre eixos
   styles.css            # folha de estilo única, ~1058 linhas, seccionada por comentários
   labs/
+    oportunidade.jsx          # tema 1 — custo de oportunidade
+    oportunidade.js           # modelo e gerador do tema 1
+    oportunidade.test.mjs
     consumidor.jsx            # tema 2 — teoria do consumidor
     utilidade.js              # modelo e gerador do tema 2
     utilidade.test.mjs
@@ -115,6 +117,9 @@ src/
     elasticidades.jsx         # tema 5 — elasticidades
     casos-elasticidade.js     # gerador dos casos do desafio do tema 5
     elasticidade.test.mjs
+    estruturas.jsx            # tema 6 — estruturas de mercado
+    estruturas.js             # regra de classificação e gerador do tema 6
+    estruturas.test.mjs
   shared/
     Slider.jsx                # controle de faixa reutilizável
     Chart.jsx                 # diagrama de Marshall: eixos, gridlines, escalas, curvas
@@ -133,8 +138,10 @@ com um cenário pronto, sem estado global e sem o lab precisar saber que o desaf
 (`4.0 Conceito`, `4.1 Laboratório`, `4.2 Desafio`) com progresso por seção, como na Cisco
 Networking Academy. `labs/equilibrio.jsx` é a referência do formato.
 
-**Cada tema avalia à sua maneira, e desenha à sua maneira.** O diagrama de Marshall serve aos
-temas 3 e 4; aplicá-lo aos demais seria forçar a forma errada. Utilidade marginal pede tabela e
+**Cada tema avalia à sua maneira, e desenha à sua maneira.** O diagrama de Marshall serve só
+aos temas 3 e 4, onde é o desenho canônico; aplicá-lo aos demais seria forçar a forma errada.
+Os outros quatro usam barras de alternativas, tabela com degraus, comparação de duas barras e
+matriz de classificação — quatro verbos distintos: escolher, preencher, calcular, posicionar. Utilidade marginal pede tabela e
 degraus, elasticidade pede comparação de barras, estruturas de mercado pede classificação. O
 verbo também muda: preencher, classificar, alocar — não só arrastar sliders.
 
