@@ -35,17 +35,6 @@ Nenhum dos dois é diagrama de Marshall. Custo de oportunidade é decisão sob r
 estruturas de mercado é classificação. Decidir o formato antes de codar qualquer coisa — ver
 as notas dos dois temas em `docs/conteudo/`.
 
-### Lab de elasticidades (tema 5)
-A aba já existe em `src/main.jsx` (`EIXOS`, entrada `elasticidades`), desabilitada e
-marcada "em breve". Falta o lab.
-
-Escopo previsto no `CLAUDE.md` §2: elasticidade-preço da demanda e da oferta,
-elasticidade-renda, elasticidade-cruzada, e a relação com receita total.
-
-Entra como `src/labs/elasticidades.jsx` consumindo `shared/` — sem refatoração de
-estrutura. As elasticidades saem das curvas que já existem em `shared/modelo.js`; se
-algo faltar lá, o certo é ampliar `shared/`, não criar variante local.
-
 ### Estreitar o lab de demanda e oferta ao seu tema
 `src/labs/substitutos.jsx` já é módulo próprio, mas segue sendo o lab completo de
 oferta e demanda: o recorte de substitutos e complementares divide espaço com renda e
