@@ -103,14 +103,17 @@ src/
   main.jsx              # casca: layout da página e navegação por abas entre eixos
   styles.css            # folha de estilo única, ~1058 linhas, seccionada por comentários
   labs/
-    substitutos.jsx     # tema 3 — demanda e oferta
-    equilibrio.jsx      # tema 4 — equilíbrio de mercado
-    elasticidades.jsx   # tema 5 — elasticidades (a construir)
+    substitutos.jsx           # tema 3 — demanda e oferta
+    equilibrio.jsx            # tema 4 — equilíbrio de mercado
+    metas-equilibrio.js       # metas do desafio do tema 4 (predicados puros)
+    metas-equilibrio.test.mjs
+    elasticidades.jsx         # tema 5 — elasticidades (a construir)
   shared/
-    Slider.jsx          # controle de faixa reutilizável
-    Chart.jsx           # diagrama de Marshall: eixos, gridlines, escalas, curvas
-    modelo.js           # curvas, equilíbrio, folga e dinâmica de ajuste
-    formato.js          # formatação numérica pt-BR
+    Slider.jsx                # controle de faixa reutilizável
+    Chart.jsx                 # diagrama de Marshall: eixos, gridlines, escalas, curvas
+    modelo.js                 # curvas, equilíbrio, folga e dinâmica de ajuste
+    formato.js                # formatação numérica pt-BR
+    persistencia.js           # estado que sobrevive ao reload (localStorage)
 ```
 
 **Navegação e estado.** As abas seguem a ordem da ementa (`TEMAS` em `main.jsx`), numeradas
@@ -118,6 +121,19 @@ de 01 a 06; as sem laboratório ficam desabilitadas e marcadas "em breve". `main
 todos os labs montados e esconde os inativos com `.lab-painel.oculto`. É o que preserva o cenário de cada eixo quando o aluno alterna de aba —
 desmontar zeraria os sliders. O botão do desafio troca a `key` do lab de demanda e oferta para remontá-lo
 com um cenário pronto, sem estado global e sem o lab precisar saber que o desafio existe.
+
+**Formato de módulo.** Um tema não é um laboratório solto: apresenta-se em seções numeradas
+(`4.0 Conceito`, `4.1 Laboratório`, `4.2 Desafio`) com progresso por seção, como na Cisco
+Networking Academy. `labs/equilibrio.jsx` é a referência do formato.
+
+**Cada tema avalia à sua maneira, e desenha à sua maneira.** O diagrama de Marshall serve aos
+temas 3 e 4; aplicá-lo aos demais seria forçar a forma errada. Utilidade marginal pede tabela e
+degraus, elasticidade pede comparação de barras, estruturas de mercado pede classificação. O
+verbo também muda: preencher, classificar, alocar — não só arrastar sliders.
+
+A avaliação prefere **predicados sobre o estado que o aluno produziu** a perguntas de múltipla
+escolha. Ficam em arquivo próprio, fora do componente, para serem verificáveis sem montar
+React — ver `labs/metas-equilibrio.js`.
 
 Regra: **nenhum lab reimplementa o que já está em `shared/`.** Se dois eixos precisam da
 mesma curva ou do mesmo gráfico, a lógica sobe para `shared/` — não é copiada.

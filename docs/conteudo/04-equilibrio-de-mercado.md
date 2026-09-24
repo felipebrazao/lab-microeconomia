@@ -39,9 +39,16 @@ os dois é o erro mais comum do tema.
 
 ## Estado no MicroLab
 
-`labs/equilibrio.jsx` cobre o tema. Mostra a folga entre Qd e Qs ao preço praticado, nomeia o
-caso, indica a direção da pressão e anima o ajuste até o novo equilíbrio. Curvas deslocadas
-deixam a posição anterior tracejada, para o deslocamento ficar visível.
+`labs/equilibrio.jsx` cobre o tema e é a **referência do formato de módulo**: três seções
+numeradas — conceito, laboratório e desafio — com progresso por seção.
+
+O laboratório mostra a folga entre Qd e Qs ao preço praticado, nomeia o caso, indica a direção
+da pressão e anima o ajuste até o novo equilíbrio. Curvas deslocadas deixam a posição anterior
+tracejada, para o deslocamento ficar visível.
+
+O desafio pede quatro estados verificados no próprio laboratório: equilibrar, provocar excesso,
+provocar escassez e encontrar o novo equilíbrio depois de deslocar uma curva. Avalia o que o
+aluno fez, não o que lembrou.
 
 Possível evolução: **cenários prontos** para os quatro casos da tabela acima, em vez de o
 aluno ter de montar cada um no slider.
