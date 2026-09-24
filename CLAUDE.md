@@ -52,8 +52,8 @@ precisa enxergar onde o que está manipulando se encaixa no curso inteiro.
 | # | Tema | Lab | Estado |
 |---|------|-----|--------|
 | 1 | Custo de oportunidade | — | Conceitual; formato a definir |
-| 2 | Teoria do consumidor | — | A construir |
-| 3 | Demanda e oferta | `labs/substitutos.jsx` | Parcial — ver lacunas na nota do tema |
+| 2 | Teoria do consumidor | `labs/consumidor.jsx` | Implementado |
+| 3 | Demanda e oferta | `labs/substitutos.jsx` | Formato completo; modelo ainda sem bens inferiores e saciados |
 | 4 | Equilíbrio de mercado | `labs/equilibrio.jsx` | Implementado |
 | 5 | Elasticidades | `labs/elasticidades.jsx` | Implementado |
 | 6 | Estruturas de mercado | — | Formato provavelmente não é diagrama de Marshall |
@@ -103,7 +103,12 @@ src/
   main.jsx              # casca: layout da página e navegação por abas entre eixos
   styles.css            # folha de estilo única, ~1058 linhas, seccionada por comentários
   labs/
+    consumidor.jsx            # tema 2 — teoria do consumidor
+    utilidade.js              # modelo e gerador do tema 2
+    utilidade.test.mjs
     substitutos.jsx           # tema 3 — demanda e oferta
+    pares-demanda.js          # gerador dos casos do desafio do tema 3
+    pares-demanda.test.mjs
     equilibrio.jsx            # tema 4 — equilíbrio de mercado
     metas-equilibrio.js       # metas do desafio do tema 4 (predicados puros)
     metas-equilibrio.test.mjs

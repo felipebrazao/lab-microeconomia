@@ -24,12 +24,6 @@ inferior, e sem modelar o caso o lab de elasticidades não consegue mostrá-lo.
 diminui). Hoje o aluno monta cada um no slider; botões de cenário deixariam a comparação
 entre os quatro imediata.
 
-### Lab de teoria do consumidor (tema 2)
-Utilidade marginal decrescente → preço marginal de reserva → equilíbrio do consumidor →
-excedente do consumidor. Segundo `docs/conteudo/02-teoria-do-consumidor.md`, é o tema que
-melhor se encaixa no formato de sliders depois de elasticidades — e explica *de onde vem* a
-curva de demanda que os outros labs usam pronta.
-
 ### Formato para custo de oportunidade (tema 1) e estruturas de mercado (tema 6)
 Nenhum dos dois é diagrama de Marshall. Custo de oportunidade é decisão sob restrição;
 estruturas de mercado é classificação. Decidir o formato antes de codar qualquer coisa — ver

@@ -36,9 +36,17 @@ e essa diferença acumulada é o ganho do consumidor na troca.
 
 ## Estado no MicroLab
 
-Sem laboratório. É o candidato mais natural a próximo lab depois de elasticidades: a tabela
-de utilidade marginal → gráfico → ponto de equilíbrio → área do excedente é uma sequência
-que se manipula bem com sliders.
+`labs/consumidor.jsx` cobre o tema em três seções.
 
-Nota de escopo: o excedente do consumidor pertence **a este tema**, não ao de equilíbrio de
+O laboratório não usa curva: as grandezas aqui são discretas, uma por unidade
+consumida. A tabela de utilidade marginal é **editável**, e cada unidade vira um degrau cuja
+parte paga se separa visualmente do excedente.
+
+O modelo reproduz os dois exemplos trabalhados em aula, fixados como teste de regressão.
+Quebrar a lei da utilidade marginal decrescente é permitido e gera um aviso — a violação é o
+que torna a lei visível.
+
+O desafio sorteia tabelas novas a cada rodada e pede o excedente por entrada numérica.
+
+Nota de escopo: o excedente do consumidor pertence a este tema, não ao de equilíbrio de
 mercado — foi por isso que ficou fora do `labs/equilibrio.jsx`.

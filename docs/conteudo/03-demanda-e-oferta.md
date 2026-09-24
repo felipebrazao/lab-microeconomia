@@ -51,8 +51,13 @@ tecnologia). Sobe com o preço: preço maior torna a produção mais atrativa.
 
 ## Estado no MicroLab
 
-`labs/substitutos.jsx` cobre o tema **parcialmente**. Tem sliders de renda, substituto,
-complementar e condições de produção, e separa visualmente movimento de deslocamento.
+`labs/substitutos.jsx` cobre o tema em três seções, com laboratório e desafio. Tem sliders de
+renda, substituto, complementar e condições de produção, e separa visualmente movimento de
+deslocamento.
+
+O desafio sorteia choques de preço sobre pares de bens reais e pede a classificação. Os pares
+são curados, não sorteados: a relação entre café e chá é fato do mundo, e sortear produziria
+economia falsa. A resposta certa sai dos sinais das duas variações.
 
 Não cobre:
 
