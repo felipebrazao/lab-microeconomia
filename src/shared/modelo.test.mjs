@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   efeitoDaRenda, equilibrio, demanda, TIPOS_DE_BEM, TIPOS_DE_BEM_IDS,
+  elasticidadeRenda, classificarElasticidadeRenda, precoChoke,
 } from './modelo.js'
 
 test('renda em alta separa os três tipos de bem', () => {
@@ -52,3 +53,42 @@ test('a demanda nunca fica negativa, qualquer que seja o tipo', () => {
   }
 })
 
+// --- elasticidade-renda ---------------------------------------------------
+
+test('cada tipo de bem cai numa classificação de elasticidade-renda', () => {
+  const preco = 28
+  const classificar = tipo => classificarElasticidadeRenda(elasticidadeRenda(tipo, 20, preco).valor)
+
+  assert.equal(classificar('normal'), 'elastica')
+  assert.equal(classificar('saciado'), 'inelastica')
+  assert.equal(classificar('inferior'), 'inferior')
+})
+
+// É o que separa esta elasticidade da de preço: lá o sinal é ruído e se usa o
+// módulo; aqui o sinal É a informação.
+test('o sinal define bem inferior, não o módulo', () => {
+  const e = elasticidadeRenda('inferior', 20, 28)
+  assert.ok(e.valor < 0)
+  assert.equal(classificarElasticidadeRenda(e.valor), 'inferior')
+  // mesmo módulo, sinal trocado: deixa de ser bem inferior. (Qual das outras
+  // três classes ele vira depende do módulo — 1,04 cai na faixa unitária.)
+  assert.notEqual(classificarElasticidadeRenda(Math.abs(e.valor)), 'inferior')
+  assert.equal(classificarElasticidadeRenda(-0.2), 'inferior', 'módulo pequeno e negativo ainda é inferior')
+  assert.equal(classificarElasticidadeRenda(0.2), 'inelastica', 'o mesmo módulo positivo não é')
+})
+
+test('o valor não depende do tamanho da variação da renda', () => {
+  const valores = [5, 20, -30].map(v => elasticidadeRenda('normal', v, 28).valor)
+  for (const v of valores) assert.ok(Math.abs(v - valores[0]) < 1e-9, `variou: ${valores}`)
+})
+
+test('o valor depende do preço, porque a base de quantidade muda', () => {
+  const barato = elasticidadeRenda('normal', 20, 12).valor
+  const caro = elasticidadeRenda('normal', 20, 40).valor
+  assert.ok(caro > barato, 'com a quantidade menor, o mesmo deslocamento pesa mais')
+})
+
+test('sem variação de renda, ou sem demanda, a elasticidade-renda não existe', () => {
+  assert.equal(classificarElasticidadeRenda(elasticidadeRenda('normal', 0, 28).valor), 'indefinida')
+  assert.equal(classificarElasticidadeRenda(elasticidadeRenda('normal', 20, precoChoke() + 4).valor), 'indefinida')
+})

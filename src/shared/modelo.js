@@ -181,3 +181,34 @@ export function efeitoDaRenda(tipo, variacaoRenda) {
   return deslocamento + 0
 }
 
+// Elasticidade-renda da procura: quanto a quantidade responde, em %, para cada
+// 1% de variação na renda do consumidor.
+//
+//   E = Var% Qd / Var% Renda
+//
+// Ao contrário da elasticidade-preço, aqui o SINAL é informação, não ruído:
+// negativo identifica bem inferior. Por isso a classificação não usa o módulo.
+export function elasticidadeRenda(tipo, variacaoRenda, preco) {
+  const qDe = demanda(preco)
+  const qPara = demanda(preco, efeitoDaRenda(tipo, variacaoRenda))
+  // O slider está em pontos percentuais; a fórmula trabalha com fração.
+  const varRenda = variacaoRenda / 100
+  const varQuantidade = qDe === 0 ? NaN : variacao(qDe, qPara)
+
+  return {
+    qDe,
+    qPara,
+    varRenda,
+    varQuantidade,
+    valor: varRenda === 0 || qDe === 0 ? NaN : varQuantidade / varRenda,
+  }
+}
+
+export function classificarElasticidadeRenda(valor) {
+  if (!Number.isFinite(valor)) return 'indefinida'
+  // Negativo antes de tudo: é o que define bem inferior, qualquer que seja o módulo.
+  if (valor < 0) return 'inferior'
+  if (valor > 1 + TOLERANCIA_UNITARIA) return 'elastica'
+  if (valor < 1 - TOLERANCIA_UNITARIA) return 'inelastica'
+  return 'unitaria'
+}
