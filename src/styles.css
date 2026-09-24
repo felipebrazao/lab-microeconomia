@@ -1431,3 +1431,153 @@ footer b {
     margin-left: 0;
   }
 }
+
+/* ================================================================== */
+/* Tema 2 — tabela de utilidade e degraus de reserva                  */
+/* ================================================================== */
+.tabela-ajuda {
+  font-size: 11px;
+  line-height: 1.55;
+  color: #748083;
+  margin: 0 0 14px;
+}
+
+.tabela-utilidade {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+
+.tabela-utilidade th {
+  font: 9px 'DM Mono', monospace;
+  letter-spacing: .06em;
+  color: #788789;
+  text-align: left;
+  font-weight: 400;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #cbd2cb;
+}
+
+.tabela-utilidade td {
+  padding: 4px 0;
+  border-bottom: 1px solid #e0e4dd;
+}
+
+.tabela-utilidade tr.compra td {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.tabela-utilidade input {
+  width: 58px;
+  font: inherit;
+  padding: 3px 6px;
+  border: 1px solid #cbd2cb;
+  background: var(--paper);
+  color: inherit;
+}
+
+.tabela-utilidade input:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: -2px;
+}
+
+.aviso {
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: #ffe6de;
+  border-left: 3px solid var(--coral);
+  padding: 9px 11px;
+  margin: 0 0 4px;
+}
+
+/* Degraus: uma barra por unidade, porque a grandeza aqui é discreta. */
+.degraus {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin: 20px 0 6px;
+  padding-bottom: 34px;
+}
+
+.degrau {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.degrau-barra {
+  position: relative;
+  width: 100%;
+  background: #e4e7de;
+  transition: height .18s;
+}
+
+.degrau-barra.comprada {
+  background: var(--teal);
+}
+
+.degrau-pago {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  background: #9fd4c0;
+}
+
+.degrau span {
+  font: 10px 'DM Mono', monospace;
+  color: #788789;
+  margin-top: 7px;
+}
+
+.linha-preco {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 2px dashed var(--coral);
+  pointer-events: none;
+}
+
+.linha-preco span {
+  position: absolute;
+  right: 0;
+  top: -16px;
+  font: 10px 'DM Mono', monospace;
+  color: var(--coral);
+}
+
+.degraus-legenda {
+  font-size: 11px;
+  line-height: 1.55;
+  color: #748083;
+  margin: 0 0 14px;
+}
+
+.caso-numero {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.caso-numero input {
+  width: 82px;
+  font: inherit;
+  padding: 6px 8px;
+  border: 1px solid #cbd2cb;
+  background: var(--paper);
+}
+
+.caso-numero input:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: -2px;
+}

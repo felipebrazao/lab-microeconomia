@@ -4,6 +4,7 @@ import './styles.css'
 import LabSubstitutos from './labs/substitutos.jsx'
 import LabEquilibrio from './labs/equilibrio.jsx'
 import LabElasticidades from './labs/elasticidades.jsx'
+import LabConsumidor from './labs/consumidor.jsx'
 import { equilibrio } from './shared/modelo.js'
 import { num } from './shared/formato.js'
 
@@ -28,7 +29,8 @@ const TEMAS = [
     id: 'consumidor',
     numero: '02',
     aba: 'Teoria do consumidor',
-    emBreve: true,
+    titulo: <>De onde vem<br /><em>a demanda.</em></>,
+    descricao: 'Antes da curva existe uma decisão: quanto vale para você a próxima unidade? Monte a tabela de satisfação e veja a demanda nascer dela.',
   },
   {
     id: 'demanda-oferta',
@@ -139,6 +141,9 @@ function App() {
         ))}
       </nav>
 
+      <div className={aba === 'consumidor' ? 'lab-painel' : 'lab-painel oculto'}>
+        <LabConsumidor />
+      </div>
       <div className={aba === 'demanda-oferta' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabSubstitutos key={chaveDesafio} inicial={cenarioDesafio} />
       </div>
