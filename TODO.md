@@ -71,6 +71,26 @@ para outro tamanho de tela.
 
 Efeito colateral: o card deixa de ter altura fixa em alguns casos.
 
+### Botão "Marcar resumo como lido" não faz nada
+`src/main.jsx` — `briefDone`, do commit inicial `b18feeb`.
+
+O botão alterna um booleano que só troca o próprio rótulo: não persiste e não alimenta
+progresso nenhum. É vestígio do protótipo, de antes de existir o sistema de progresso por
+módulo — e hoje concorre com ele. O aluno marca "resumo concluído" e nada acontece, enquanto o
+`conceitoLido` de cada módulo é o que de fato conta.
+
+Decidir: remover o botão, ou ligá-lo a algo real. É decisão de produto, não de limpeza.
+
+### Extrair a moldura do desafio para `shared/`
+Os cinco labs que usam desafio por casos repetem a mesma moldura em `function Desafio(...)`:
+`metas-topo` com contador, `metas-intro`, `<ul className="casos">`, feedback por caso,
+`metas-fim` e o botão de sortear. Medido entre `oportunidade` e `estruturas`: **30 de 55 linhas
+idênticas**.
+
+O miolo difere de verdade — entrada numérica nos temas 1 e 2, botões nos temas 3 e 6, opções por
+medida no tema 5 — então a extração precisa receber o miolo como filho, não como prop. É uma
+abstração mais pesada que a de `SecoesDoModulo`, e por isso ficou de fora daquela rodada.
+
 ### Órbita do hero perdeu o vínculo ao vivo
 Antes da modularização, o círculo central do hero mostrava o preço do slider do lab em
 tempo real. Com o lab fora de `main.jsx`, passou a mostrar o preço de equilíbrio do
