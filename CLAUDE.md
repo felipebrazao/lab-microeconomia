@@ -52,10 +52,10 @@ precisa enxergar onde o que está manipulando se encaixa no curso inteiro.
 | # | Tema | Lab | Estado |
 |---|------|-----|--------|
 | 1 | Custo de oportunidade | — | Conceitual; formato a definir |
-| 2 | Teoria do consumidor | — | A construir |
-| 3 | Demanda e oferta | `labs/substitutos.jsx` | Parcial — ver lacunas na nota do tema |
+| 2 | Teoria do consumidor | `labs/consumidor.jsx` | Implementado |
+| 3 | Demanda e oferta | `labs/substitutos.jsx` | Formato completo; modelo ainda sem bens inferiores e saciados |
 | 4 | Equilíbrio de mercado | `labs/equilibrio.jsx` | Implementado |
-| 5 | Elasticidades | — | A construir |
+| 5 | Elasticidades | `labs/elasticidades.jsx` | Implementado |
 | 6 | Estruturas de mercado | — | Formato provavelmente não é diagrama de Marshall |
 
 **As notas de conteúdo de cada tema estão em [`docs/`](docs/README.md)** — conceitos, notação
@@ -78,7 +78,9 @@ Os labs compartilham o mesmo mercado (café) e as mesmas curvas, vindas de `shar
   `@vitejs/plugin-react` 6.1.1) — sem `^` e sem `latest`. Num projeto sem testes, um salto de
   major silencioso só apareceria em runtime. Atualizar é ato deliberado: mude a versão e
   verifique. Não afrouxe para faixas sem combinar.
-- Sem testes, sem linter, sem formatter configurados.
+- **Testes com o runner nativo do Node** (`npm test`) — sem framework e sem dependência.
+  Cobrem a lógica pura: o modelo econômico e os predicados de avaliação, que são funções
+  sem React e por isso verificáveis sem montar nada. Sem linter e sem formatter.
 - **`vite.config.js`** carrega o `@vitejs/plugin-react`, o que habilita **Fast Refresh**:
   ao editar um componente, o estado dos sliders do laboratório é preservado em vez de a
   página recarregar inteira. O plugin não altera o bundle de produção — só o dev.
@@ -101,14 +103,24 @@ src/
   main.jsx              # casca: layout da página e navegação por abas entre eixos
   styles.css            # folha de estilo única, ~1058 linhas, seccionada por comentários
   labs/
-    substitutos.jsx     # tema 3 — demanda e oferta
-    equilibrio.jsx      # tema 4 — equilíbrio de mercado
-    elasticidades.jsx   # tema 5 — elasticidades (a construir)
+    consumidor.jsx            # tema 2 — teoria do consumidor
+    utilidade.js              # modelo e gerador do tema 2
+    utilidade.test.mjs
+    substitutos.jsx           # tema 3 — demanda e oferta
+    pares-demanda.js          # gerador dos casos do desafio do tema 3
+    pares-demanda.test.mjs
+    equilibrio.jsx            # tema 4 — equilíbrio de mercado
+    metas-equilibrio.js       # metas do desafio do tema 4 (predicados puros)
+    metas-equilibrio.test.mjs
+    elasticidades.jsx         # tema 5 — elasticidades
+    casos-elasticidade.js     # gerador dos casos do desafio do tema 5
+    elasticidade.test.mjs
   shared/
-    Slider.jsx          # controle de faixa reutilizável
-    Chart.jsx           # diagrama de Marshall: eixos, gridlines, escalas, curvas
-    modelo.js           # curvas, equilíbrio, folga e dinâmica de ajuste
-    formato.js          # formatação numérica pt-BR
+    Slider.jsx                # controle de faixa reutilizável
+    Chart.jsx                 # diagrama de Marshall: eixos, gridlines, escalas, curvas
+    modelo.js                 # curvas, equilíbrio, folga e dinâmica de ajuste
+    formato.js                # formatação numérica pt-BR
+    persistencia.js           # estado que sobrevive ao reload (localStorage)
 ```
 
 **Navegação e estado.** As abas seguem a ordem da ementa (`TEMAS` em `main.jsx`), numeradas
@@ -116,6 +128,19 @@ de 01 a 06; as sem laboratório ficam desabilitadas e marcadas "em breve". `main
 todos os labs montados e esconde os inativos com `.lab-painel.oculto`. É o que preserva o cenário de cada eixo quando o aluno alterna de aba —
 desmontar zeraria os sliders. O botão do desafio troca a `key` do lab de demanda e oferta para remontá-lo
 com um cenário pronto, sem estado global e sem o lab precisar saber que o desafio existe.
+
+**Formato de módulo.** Um tema não é um laboratório solto: apresenta-se em seções numeradas
+(`4.0 Conceito`, `4.1 Laboratório`, `4.2 Desafio`) com progresso por seção, como na Cisco
+Networking Academy. `labs/equilibrio.jsx` é a referência do formato.
+
+**Cada tema avalia à sua maneira, e desenha à sua maneira.** O diagrama de Marshall serve aos
+temas 3 e 4; aplicá-lo aos demais seria forçar a forma errada. Utilidade marginal pede tabela e
+degraus, elasticidade pede comparação de barras, estruturas de mercado pede classificação. O
+verbo também muda: preencher, classificar, alocar — não só arrastar sliders.
+
+A avaliação prefere **predicados sobre o estado que o aluno produziu** a perguntas de múltipla
+escolha. Ficam em arquivo próprio, fora do componente, para serem verificáveis sem montar
+React — ver `labs/metas-equilibrio.js`.
 
 Regra: **nenhum lab reimplementa o que já está em `shared/`.** Se dois eixos precisam da
 mesma curva ou do mesmo gráfico, a lógica sobe para `shared/` — não é copiada.
@@ -229,4 +254,4 @@ Já resolvido:
 Se o build voltar a falhar com `Permission denied` no `.bin/vite` ou com erro de carga de
 binding nativo, a causa é essa e a correção é reinstalar do zero.
 
-Ausências conhecidas: não há CI, deploy, testes nem linter — ver `TODO.md`.
+Ausências conhecidas: não há CI, deploy nem linter — ver `TODO.md`.

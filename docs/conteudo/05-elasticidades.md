@@ -74,8 +74,21 @@ negativa para complementares — a formalização do que o tema 3 introduziu qua
 
 ## Estado no MicroLab
 
-**A construir.** A aba existe em `main.jsx`, desabilitada e marcada "em breve".
+`labs/elasticidades.jsx` cobre a **elasticidade-preço da demanda**, em três seções.
 
-As sensibilidades já estão em `shared/modelo.js` (`SENSIBILIDADE_DEMANDA` e
-`SENSIBILIDADE_OFERTA`): são o `dQ/dP` da fórmula, e o lab só precisa combiná-las com o par
-(P, Q) do ponto analisado.
+O laboratório não usa diagrama de Marshall: elasticidade é razão entre duas variações, e a
+forma que mostra isso são duas barras a partir de um zero central — a maior manda. O aluno
+escolhe dois preços e lê a elasticidade e o efeito sobre a receita.
+
+O cálculo usa **variação percentual simples entre dois pontos** (`Var% Q / Var% P`), que é a
+fórmula dos exercícios da disciplina — não a elasticidade-ponto `(dQ/dP)·(P/Q)`. Quem for
+evoluir o tema precisa saber disso antes de mexer: as duas dão valores diferentes no mesmo
+trecho da curva.
+
+A faixa dos sliders para antes do **preço de choke** (R$ 52), acima do qual a quantidade
+demandada é zero e a elasticidade deixa de existir.
+
+O desafio sorteia os casos a cada rodada, sem banco de perguntas, e conta rodadas fechadas
+para o aluno poder treinar repetidamente.
+
+**Ainda não cobre:** elasticidade da oferta, elasticidade-renda e elasticidade-cruzada.

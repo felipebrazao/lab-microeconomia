@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './styles.css'
 import LabSubstitutos from './labs/substitutos.jsx'
 import LabEquilibrio from './labs/equilibrio.jsx'
+import LabElasticidades from './labs/elasticidades.jsx'
+import LabConsumidor from './labs/consumidor.jsx'
 import { equilibrio } from './shared/modelo.js'
 import { num } from './shared/formato.js'
 
@@ -27,7 +29,8 @@ const TEMAS = [
     id: 'consumidor',
     numero: '02',
     aba: 'Teoria do consumidor',
-    emBreve: true,
+    titulo: <>De onde vem<br /><em>a demanda.</em></>,
+    descricao: 'Antes da curva existe uma decisão: quanto vale para você a próxima unidade? Monte a tabela de satisfação e veja a demanda nascer dela.',
   },
   {
     id: 'demanda-oferta',
@@ -47,7 +50,8 @@ const TEMAS = [
     id: 'elasticidades',
     numero: '05',
     aba: 'Elasticidades',
-    emBreve: true,
+    titulo: <>Não basta a direção,<br /><em>falta a intensidade.</em></>,
+    descricao: 'Demanda e oferta dizem para onde a quantidade se move. A elasticidade diz o quanto — e é ela que decide se baixar o preço aumenta ou derruba a receita.',
   },
   {
     id: 'estruturas',
@@ -137,11 +141,17 @@ function App() {
         ))}
       </nav>
 
+      <div className={aba === 'consumidor' ? 'lab-painel' : 'lab-painel oculto'}>
+        <LabConsumidor />
+      </div>
       <div className={aba === 'demanda-oferta' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabSubstitutos key={chaveDesafio} inicial={cenarioDesafio} />
       </div>
       <div className={aba === 'equilibrio' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabEquilibrio />
+      </div>
+      <div className={aba === 'elasticidades' ? 'lab-painel' : 'lab-painel oculto'}>
+        <LabElasticidades />
       </div>
     </section>
 

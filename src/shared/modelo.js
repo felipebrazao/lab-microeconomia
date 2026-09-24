@@ -91,3 +91,52 @@ export function proximoPreco(preco, deslocDemanda = 0, deslocOferta = 0) {
   const { folga } = situacao(preco, deslocDemanda, deslocOferta)
   return preco + VELOCIDADE_AJUSTE * folga
 }
+
+// Preço a partir do qual ninguém mais compra (preço de choke). Acima dele a
+// quantidade demandada é zero e a elasticidade deixa de ser definida — por isso
+// o laboratório de elasticidades não deixa o aluno chegar até aqui.
+export function precoChoke(deslocamento = 0) {
+  return (DEMANDA_A_PRECO_ZERO + deslocamento) / SENSIBILIDADE_DEMANDA
+}
+
+// Variação percentual entre dois valores, em pontos percentuais (0,5 = +50%).
+export function variacao(de, para) {
+  return (para - de) / de
+}
+
+// Elasticidade-preço da demanda entre dois pontos: quanto a quantidade responde,
+// em %, para cada 1% de variação no preço.
+//
+//   E = Var% Qd / Var% P
+//
+// Usa variação percentual simples, como nos exercícios da disciplina — não a
+// fórmula do ponto médio. O sinal sai negativo porque preço e quantidade andam
+// em sentidos opostos; a classificação olha o módulo.
+export function elasticidadePreco(precoDe, precoPara, deslocamento = 0) {
+  const qDe = demanda(precoDe, deslocamento)
+  const qPara = demanda(precoPara, deslocamento)
+  const varPreco = variacao(precoDe, precoPara)
+  const varQuantidade = qDe === 0 ? NaN : variacao(qDe, qPara)
+
+  return {
+    qDe,
+    qPara,
+    varPreco,
+    varQuantidade,
+    valor: varPreco === 0 ? NaN : varQuantidade / varPreco,
+    receitaDe: precoDe * qDe,
+    receitaPara: precoPara * qPara,
+  }
+}
+
+// Faixa em torno de 1 tratada como elasticidade unitária. Sem ela o caso
+// unitário seria inalcançável na prática: exigiria acertar o valor exato.
+export const TOLERANCIA_UNITARIA = 0.05
+
+export function classificarElasticidade(valor) {
+  if (!Number.isFinite(valor)) return 'indefinida'
+  const modulo = Math.abs(valor)
+  if (modulo > 1 + TOLERANCIA_UNITARIA) return 'elastica'
+  if (modulo < 1 - TOLERANCIA_UNITARIA) return 'inelastica'
+  return 'unitaria'
+}
