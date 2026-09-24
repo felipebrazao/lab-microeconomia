@@ -30,5 +30,15 @@ isso faz um negócio parecer lucrativo quando apenas empata com a alternativa.
 
 ## Estado no MicroLab
 
-Sem laboratório. É um tema de decisão sob restrição, não de curvas — se virar lab, a forma
-provável é comparar alternativas, não manipular oferta e demanda.
+`labs/oportunidade.jsx` cobre o tema em três seções.
+
+O laboratório não usa gráfico: o recurso é indivisível e só cabe um uso, então a forma são
+barras de alternativas lado a lado, com a melhor abandonada destacada. O aluno ajusta o
+retorno de cada uso e escolhe um.
+
+A métrica que carrega o conceito é o **ganho líquido** — retorno da escolha menos o da melhor
+abandonada. Negativo significa que havia opção melhor, mesmo com o caixa positivo; zero
+significa que a escolha apenas empata com o que se sacrificou.
+
+O desafio sorteia cenários e pede o custo de oportunidade por entrada numérica. Os valores
+são sempre distintos: com empate no topo a resposta seria ambígua.

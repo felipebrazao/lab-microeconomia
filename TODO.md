@@ -24,11 +24,6 @@ inferior, e sem modelar o caso o lab de elasticidades não consegue mostrá-lo.
 diminui). Hoje o aluno monta cada um no slider; botões de cenário deixariam a comparação
 entre os quatro imediata.
 
-### Formato para custo de oportunidade (tema 1) e estruturas de mercado (tema 6)
-Nenhum dos dois é diagrama de Marshall. Custo de oportunidade é decisão sob restrição;
-estruturas de mercado é classificação. Decidir o formato antes de codar qualquer coisa — ver
-as notas dos dois temas em `docs/conteudo/`.
-
 ### Estreitar o lab de demanda e oferta ao seu tema
 `src/labs/substitutos.jsx` já é módulo próprio, mas segue sendo o lab completo de
 oferta e demanda: o recorte de substitutos e complementares divide espaço com renda e

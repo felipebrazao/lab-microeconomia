@@ -85,9 +85,18 @@ mas a livre entrada impede que essa margem se sustente indefinidamente.
 
 ## Estado no MicroLab
 
-Sem laboratório. É o tema que menos se encaixa no formato atual de sliders sobre curvas: a
-manipulação natural aqui é **classificatória** (dado um mercado, que estrutura é?) ou
-**comparativa**, não o ajuste contínuo de parâmetros.
+`labs/estruturas.jsx` cobre o tema em três seções.
 
-Se virar lab, vale decidir o formato antes de começar — a forma provável não é um diagrama
-de Marshall.
+A manipulação é classificatória, como previsto: o aluno monta a combinação dos três
+determinantes — quantos vendem, quantos compram, produto homogêneo ou diferenciado — e a
+matriz acende a célula correspondente. Não há gráfico.
+
+Trocar apenas a diferenciação leva de concorrência perfeita a monopolista, que é justamente o
+que separa as duas.
+
+**Limite declarado:** concentração simultânea dos dois lados (um ou poucos vendedores *e* um
+ou poucos compradores) fica marcada como fora do recorte, sem nome. A ementa trata
+concentração de um lado por vez, e inventar rótulo ali ensinaria o que a aula não deu.
+
+O desafio sorteia mercados descritos pelos determinantes, sem citar setores reais — como a
+estrutura é sorteada, um setor real não acompanharia e o enunciado afirmaria algo falso.

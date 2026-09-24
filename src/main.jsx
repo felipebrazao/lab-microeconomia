@@ -5,6 +5,8 @@ import LabSubstitutos from './labs/substitutos.jsx'
 import LabEquilibrio from './labs/equilibrio.jsx'
 import LabElasticidades from './labs/elasticidades.jsx'
 import LabConsumidor from './labs/consumidor.jsx'
+import LabOportunidade from './labs/oportunidade.jsx'
+import LabEstruturas from './labs/estruturas.jsx'
 import { equilibrio } from './shared/modelo.js'
 import { num } from './shared/formato.js'
 
@@ -23,7 +25,8 @@ const TEMAS = [
     id: 'custo-oportunidade',
     numero: '01',
     aba: 'Custo de oportunidade',
-    emBreve: true,
+    titulo: <>Toda escolha<br /><em>abre mão de outra.</em></>,
+    descricao: 'O que uma decisão custa não é o dinheiro que sai do bolso: é o valor da melhor alternativa que ficou para trás.',
   },
   {
     id: 'consumidor',
@@ -57,7 +60,8 @@ const TEMAS = [
     id: 'estruturas',
     numero: '06',
     aba: 'Estruturas de mercado',
-    emBreve: true,
+    titulo: <>Quem manda<br /><em>no preço.</em></>,
+    descricao: 'Quantos vendem, quantos compram e se dá para entrar. Três perguntas classificam qualquer mercado — e dizem de que lado está o poder.',
   },
 ]
 
@@ -141,6 +145,9 @@ function App() {
         ))}
       </nav>
 
+      <div className={aba === 'custo-oportunidade' ? 'lab-painel' : 'lab-painel oculto'}>
+        <LabOportunidade />
+      </div>
       <div className={aba === 'consumidor' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabConsumidor />
       </div>
@@ -152,6 +159,9 @@ function App() {
       </div>
       <div className={aba === 'elasticidades' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabElasticidades />
+      </div>
+      <div className={aba === 'estruturas' ? 'lab-painel' : 'lab-painel oculto'}>
+        <LabEstruturas />
       </div>
     </section>
 
