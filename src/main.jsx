@@ -23,6 +23,10 @@ const concepts = [
 const TEMAS = [
   {
     id: 'custo-oportunidade',
+    desafio: {
+      titulo: <>Consegue medir o que<br />foi abandonado?</>,
+      texto: 'Cenários sorteados, com alternativas e valores novos a cada rodada. Diga o custo de oportunidade de quem escolheu.',
+    },
     numero: '01',
     aba: 'Custo de oportunidade',
     titulo: <>Toda escolha<br /><em>abre mão de outra.</em></>,
@@ -30,6 +34,10 @@ const TEMAS = [
   },
   {
     id: 'consumidor',
+    desafio: {
+      titulo: <>Consegue calcular<br />o excedente?</>,
+      texto: 'Descubra até onde o consumidor compra e some, nas unidades compradas, o que ele deixou de pagar.',
+    },
     numero: '02',
     aba: 'Teoria do consumidor',
     titulo: <>De onde vem<br /><em>a demanda.</em></>,
@@ -37,6 +45,10 @@ const TEMAS = [
   },
   {
     id: 'demanda-oferta',
+    desafio: {
+      titulo: <>Competem ou<br />andam juntos?</>,
+      texto: 'Choques sorteados sobre pares de bens. Pela direção em que a demanda reagiu, diga se são substitutos ou complementares.',
+    },
     numero: '03',
     aba: 'Demanda e oferta',
     titulo: <>Faça o mercado<br /><em>se mover.</em></>,
@@ -44,6 +56,10 @@ const TEMAS = [
   },
   {
     id: 'equilibrio',
+    desafio: {
+      titulo: <>Consegue criar<br />um novo equilíbrio?</>,
+      texto: 'Quatro metas verificadas no próprio laboratório: provoque escassez, provoque excesso, equilibre o mercado e desloque uma curva.',
+    },
     numero: '04',
     aba: 'Equilíbrio de mercado',
     titulo: <>Quando falta,<br /><em>quando sobra.</em></>,
@@ -51,6 +67,10 @@ const TEMAS = [
   },
   {
     id: 'elasticidades',
+    desafio: {
+      titulo: <>A quantidade responde<br />mais ou menos?</>,
+      texto: 'Quatro casos por rodada: dois medem a resposta ao preço e dois à renda. Só nos de renda o sinal negativo é resposta.',
+    },
     numero: '05',
     aba: 'Elasticidades',
     titulo: <>Não basta a direção,<br /><em>falta a intensidade.</em></>,
@@ -58,6 +78,10 @@ const TEMAS = [
   },
   {
     id: 'estruturas',
+    desafio: {
+      titulo: <>Que mercado<br />é este?</>,
+      texto: 'Mercados descritos pelos determinantes, sem citar setores. Conte quantos há de cada lado e classifique a estrutura.',
+    },
     numero: '06',
     aba: 'Estruturas de mercado',
     titulo: <>Quem manda<br /><em>no preço.</em></>,
@@ -71,20 +95,19 @@ const PRECO_BASE = equilibrio().preco
 function App() {
   const [aba, setAba] = useState('demanda-oferta')
   const [briefDone, setBriefDone] = useState(false)
-  // O desafio recarrega o lab de demanda e oferta com um cenário pronto. Trocar a chave remonta o
-  // lab, que é exatamente o que "carregar um cenário" significa: começar de novo
-  // a partir dali, sem estado global e sem o lab precisar saber do desafio.
-  const [cenarioDesafio, setCenarioDesafio] = useState(undefined)
-  const [chaveDesafio, setChaveDesafio] = useState(0)
+  // A faixa de desafio age sobre o tema ABERTO, não sobre um tema fixo. Guardar
+  // qual tema pediu impede o sinal de vazar para os outros labs e marcá-los como
+  // visitados sem o aluno ter entrado neles.
+  const [pedidoDesafio, setPedidoDesafio] = useState({ tema: null, n: 0 })
 
   const temaAtivo = TEMAS.find(t => t.id === aba)
 
-  const carregarDesafio = () => {
-    setCenarioDesafio({ preco: 36, renda: 20, substituto: 15, complementar: 0, producao: 0 })
-    setChaveDesafio(c => c + 1)
-    setAba('demanda-oferta')
+  const abrirDesafio = () => {
+    setPedidoDesafio(p => ({ tema: aba, n: p.n + 1 }))
     document.getElementById('lab').scrollIntoView({ behavior: 'smooth' })
   }
+
+  const sinalPara = id => (pedidoDesafio.tema === id ? pedidoDesafio.n : 0)
 
   return <main>
     <header className="topbar">
@@ -146,32 +169,32 @@ function App() {
       </nav>
 
       <div className={aba === 'custo-oportunidade' ? 'lab-painel' : 'lab-painel oculto'}>
-        <LabOportunidade />
+        <LabOportunidade abrirDesafio={sinalPara('custo-oportunidade')} />
       </div>
       <div className={aba === 'consumidor' ? 'lab-painel' : 'lab-painel oculto'}>
-        <LabConsumidor />
+        <LabConsumidor abrirDesafio={sinalPara('consumidor')} />
       </div>
       <div className={aba === 'demanda-oferta' ? 'lab-painel' : 'lab-painel oculto'}>
-        <LabSubstitutos key={chaveDesafio} inicial={cenarioDesafio} />
+        <LabSubstitutos abrirDesafio={sinalPara('demanda-oferta')} />
       </div>
       <div className={aba === 'equilibrio' ? 'lab-painel' : 'lab-painel oculto'}>
-        <LabEquilibrio />
+        <LabEquilibrio abrirDesafio={sinalPara('equilibrio')} />
       </div>
       <div className={aba === 'elasticidades' ? 'lab-painel' : 'lab-painel oculto'}>
-        <LabElasticidades />
+        <LabElasticidades abrirDesafio={sinalPara('elasticidades')} />
       </div>
       <div className={aba === 'estruturas' ? 'lab-painel' : 'lab-painel oculto'}>
-        <LabEstruturas />
+        <LabEstruturas abrirDesafio={sinalPara('estruturas')} />
       </div>
     </section>
 
     <section className="challenge">
       <div>
-        <p className="eyebrow">DESAFIO RÁPIDO</p>
-        <h2>Consegue criar<br/>um novo equilíbrio?</h2>
-        <p>Aumente a renda em 20%, suba o preço do chá e ajuste o preço do café até oferta e demanda se encontrarem.</p>
+        <p className="eyebrow">DESAFIO RÁPIDO <span>·</span> {temaAtivo.aba.toUpperCase()}</p>
+        <h2>{temaAtivo.desafio.titulo}</h2>
+        <p>{temaAtivo.desafio.texto}</p>
       </div>
-      <button className="button light" onClick={carregarDesafio}>Carregar desafio <span>→</span></button>
+      <button className="button light" onClick={abrirDesafio}>Ir para o desafio <span>→</span></button>
     </section>
 
     <footer><span>MICROLAB <b>·</b> APRENDER FAZENDO</span><span>Fundamentos de Microeconomia — 2026</span></footer>

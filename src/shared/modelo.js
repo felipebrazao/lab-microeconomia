@@ -27,6 +27,8 @@ export const PRECO_MAX = 64
 // Conversão de um choque percentual (o que o aluno move no slider) para
 // deslocamento em mil unidades. Cada ponto percentual de variação na renda
 // desloca a demanda em 0,75 mil unidades, e assim por diante.
+//
+// Este é o efeito de um BEM NORMAL. Os outros dois tipos estão em TIPOS_DE_BEM.
 export const EFEITO_RENDA = 0.75
 export const EFEITO_SUBSTITUTO = 0.6
 export const EFEITO_COMPLEMENTAR = 0.5
@@ -138,5 +140,75 @@ export function classificarElasticidade(valor) {
   const modulo = Math.abs(valor)
   if (modulo > 1 + TOLERANCIA_UNITARIA) return 'elastica'
   if (modulo < 1 - TOLERANCIA_UNITARIA) return 'inelastica'
+  return 'unitaria'
+}
+
+// A relação entre renda e demanda não é a mesma para todo bem. A regra geral
+// vale para bens normais, e a ementa trata duas exceções — é o que distingue,
+// mais adiante, elasticidade-renda positiva de negativa.
+export const TIPOS_DE_BEM = {
+  normal: {
+    rotulo: 'Normal',
+    efeitoRenda: EFEITO_RENDA,
+    resumo: 'Renda sobe, demanda sobe. É a regra geral.',
+  },
+  saciado: {
+    rotulo: 'Saciado',
+    // Zero, não "quase zero": o consumidor já está satisfeito, e mais renda
+    // não muda o consumo. O sal é o exemplo clássico.
+    efeitoRenda: 0,
+    resumo: 'O consumidor já está satisfeito: mais renda não muda o consumo.',
+  },
+  inferior: {
+    rotulo: 'Inferior',
+    // Negativo: renda sobe e a demanda CAI, porque o consumidor troca por uma
+    // alternativa melhor. O módulo é menor que o do bem normal porque a troca
+    // é parcial — parte do consumo persiste. O valor exato não vem da teoria,
+    // que só fixa o sinal; é calibragem para o efeito ser legível no gráfico.
+    efeitoRenda: -0.5,
+    resumo: 'Renda sobe e a demanda cai: o consumidor troca por algo melhor.',
+  },
+}
+
+export const TIPOS_DE_BEM_IDS = Object.keys(TIPOS_DE_BEM)
+
+// Deslocamento da demanda, em mil unidades, causado por uma variação percentual
+// da renda sobre um bem de determinado tipo.
+export function efeitoDaRenda(tipo, variacaoRenda) {
+  const deslocamento = variacaoRenda * TIPOS_DE_BEM[tipo].efeitoRenda
+  // Queda de renda sobre bem saciado dá -0 em JavaScript, que chegaria à tela
+  // como "-0 mil un.". Somar zero devolve o zero positivo.
+  return deslocamento + 0
+}
+
+// Elasticidade-renda da procura: quanto a quantidade responde, em %, para cada
+// 1% de variação na renda do consumidor.
+//
+//   E = Var% Qd / Var% Renda
+//
+// Ao contrário da elasticidade-preço, aqui o SINAL é informação, não ruído:
+// negativo identifica bem inferior. Por isso a classificação não usa o módulo.
+export function elasticidadeRenda(tipo, variacaoRenda, preco) {
+  const qDe = demanda(preco)
+  const qPara = demanda(preco, efeitoDaRenda(tipo, variacaoRenda))
+  // O slider está em pontos percentuais; a fórmula trabalha com fração.
+  const varRenda = variacaoRenda / 100
+  const varQuantidade = qDe === 0 ? NaN : variacao(qDe, qPara)
+
+  return {
+    qDe,
+    qPara,
+    varRenda,
+    varQuantidade,
+    valor: varRenda === 0 || qDe === 0 ? NaN : varQuantidade / varRenda,
+  }
+}
+
+export function classificarElasticidadeRenda(valor) {
+  if (!Number.isFinite(valor)) return 'indefinida'
+  // Negativo antes de tudo: é o que define bem inferior, qualquer que seja o módulo.
+  if (valor < 0) return 'inferior'
+  if (valor > 1 + TOLERANCIA_UNITARIA) return 'elastica'
+  if (valor < 1 - TOLERANCIA_UNITARIA) return 'inelastica'
   return 'unitaria'
 }

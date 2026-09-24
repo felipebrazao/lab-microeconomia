@@ -59,7 +59,13 @@ O desafio sorteia choques de preço sobre pares de bens reais e pede a classific
 são curados, não sorteados: a relação entre café e chá é fato do mundo, e sortear produziria
 economia falsa. A resposta certa sai dos sinais das duas variações.
 
+O seletor de **tipo do bem** cobre as três relações com a renda: normal, saciado e inferior.
+Trocar o tipo muda o sinal do deslocamento, e no bem inferior uma queda de renda **aumenta** a
+demanda — o caso que a leitura do cenário nomeia.
+
+Os coeficientes de cada tipo estão em `TIPOS_DE_BEM`, em `shared/modelo.js`. A teoria fixa só o
+sinal; o módulo do efeito do bem inferior é calibragem para o deslocamento ser legível.
+
 Não cobre:
 
-- **bens inferiores e saciados** — o modelo só tem bem normal, com renda ↑ → demanda ↑
 - **efeito renda e efeito substituição** nomeados como tais na interface

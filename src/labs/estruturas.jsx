@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { usePersistido } from '../shared/persistencia.js'
+import SecoesDoModulo from '../shared/SecoesDoModulo.jsx'
 import {
   classificar, gerarRodada, enunciado,
   ESTRUTURAS, QUANTIDADES, FORA_DO_RECORTE,
@@ -14,7 +15,7 @@ const SECOES = [
 const ROTULO = { um: 'Um', poucos: 'Poucos', muitos: 'Muitos' }
 const OPCOES = Object.keys(ESTRUTURAS)
 
-export default function LabEstruturas() {
+export default function LabEstruturas({ abrirDesafio = 0 }) {
   const [vendedores, setVendedores] = useState('muitos')
   const [compradores, setCompradores] = useState('muitos')
   const [diferenciado, setDiferenciado] = useState(false)
@@ -41,42 +42,30 @@ export default function LabEstruturas() {
   }
 
   const secaoOk = { conceito: conceitoLido, laboratorio: labVisitado, desafio: rodadas > 0 }
-  const concluidas = SECOES.filter(sec => secaoOk[sec.id]).length
 
   const irPara = id => {
     setSecao(id)
     if (id !== 'conceito') setLabVisitado(true)
   }
 
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
+
   return (
     <>
-    <nav className="secoes" aria-label="Seções do módulo">
-      <div className="secoes-topo">
-        <span className="secoes-rotulo">MÓDULO 06 · ESTRUTURAS DE MERCADO</span>
-        <span className="secoes-progresso">{concluidas} de {SECOES.length} concluídas</span>
-      </div>
-      <div className="secoes-barra">
-        <i style={{ width: `${(concluidas / SECOES.length) * 100}%` }} />
-      </div>
-      <ul>
-        {SECOES.map(sec => (
-          <li key={sec.id}>
-            <button
-              className={`secao-item ${secao === sec.id ? 'ativa' : ''}`}
-              onClick={() => irPara(sec.id)}
-              aria-current={secao === sec.id ? 'step' : undefined}
-            >
-              <span className={`secao-check ${secaoOk[sec.id] ? 'feito' : ''}`} aria-hidden="true">
-                {secaoOk[sec.id] ? '✓' : '○'}
-              </span>
-              <span className="secao-num">{sec.numero}</span>
-              <span className="secao-titulo">{sec.titulo}</span>
-              {sec.id === 'desafio' && <span className="secao-contador">{acertos}/{rodada.length}</span>}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <SecoesDoModulo
+      rotulo="MÓDULO 06 · ESTRUTURAS DE MERCADO"
+      secoes={SECOES}
+      ativa={secao}
+      concluidas={secaoOk}
+      contador={`${acertos}/${rodada.length}`}
+      onIr={irPara}
+    />
 
     {secao === 'conceito' && (
       <div className="conceito">

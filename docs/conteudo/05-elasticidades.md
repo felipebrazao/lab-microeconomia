@@ -91,4 +91,15 @@ demandada é zero e a elasticidade deixa de existir.
 O desafio sorteia os casos a cada rodada, sem banco de perguntas, e conta rodadas fechadas
 para o aluno poder treinar repetidamente.
 
-**Ainda não cobre:** elasticidade da oferta, elasticidade-renda e elasticidade-cruzada.
+O laboratório alterna entre **elasticidade-preço** e **elasticidade-renda** no mesmo par de
+barras. A diferença entre as duas está no tratamento do sinal: na de preço ele é ruído, e a
+classificação usa o módulo; na de renda **o sinal é a informação** — negativo identifica bem
+inferior, e por isso ela tem uma classe a mais.
+
+Na leitura visual, barras no mesmo sentido indicam bem normal; em sentidos opostos, bem
+inferior.
+
+O desafio sorteia quatro casos por rodada, dois de cada medida. A opção "bem inferior" só
+aparece nos de renda.
+
+**Ainda não cobre:** elasticidade da oferta e elasticidade-cruzada.

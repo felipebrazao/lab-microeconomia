@@ -52,7 +52,7 @@ precisa enxergar onde o que está manipulando se encaixa no curso inteiro.
 |---|------|-----|--------|
 | 1 | Custo de oportunidade | `labs/oportunidade.jsx` | Implementado |
 | 2 | Teoria do consumidor | `labs/consumidor.jsx` | Implementado |
-| 3 | Demanda e oferta | `labs/substitutos.jsx` | Formato completo; modelo ainda sem bens inferiores e saciados |
+| 3 | Demanda e oferta | `labs/substitutos.jsx` | Implementado |
 | 4 | Equilíbrio de mercado | `labs/equilibrio.jsx` | Implementado |
 | 5 | Elasticidades | `labs/elasticidades.jsx` | Implementado |
 | 6 | Estruturas de mercado | `labs/estruturas.jsx` | Implementado |

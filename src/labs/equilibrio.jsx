@@ -3,6 +3,7 @@ import Slider from '../shared/Slider.jsx'
 import Chart from '../shared/Chart.jsx'
 import { num } from '../shared/formato.js'
 import { usePersistido } from '../shared/persistencia.js'
+import SecoesDoModulo from '../shared/SecoesDoModulo.jsx'
 import { METAS } from './metas-equilibrio.js'
 import {
   situacao,
@@ -49,7 +50,7 @@ const SECOES = [
   { id: 'desafio', numero: '4.2', titulo: 'Desafio' },
 ]
 
-export default function LabEquilibrio() {
+export default function LabEquilibrio({ abrirDesafio = 0 }) {
   const [preco, setPreco] = useState(PRECO_INICIAL)
   const [choqueDemanda, setChoqueDemanda] = useState(0)
   const [choqueOferta, setChoqueOferta] = useState(0)
@@ -124,7 +125,6 @@ export default function LabEquilibrio() {
     laboratorio: labVisitado,
     desafio: feitas.length === METAS.length,
   }
-  const concluidas = SECOES.filter(sec => secaoOk[sec.id]).length
 
   // Entrar no laboratório ou no desafio já conta como visitar o laboratório —
   // são a mesma tela, o desafio só acrescenta o painel de metas.
@@ -133,37 +133,24 @@ export default function LabEquilibrio() {
     if (id !== 'conceito') setLabVisitado(true)
   }
 
+  // A faixa "Desafio rápido" da página pede a abertura desta seção. Vem como
+  // número que só cresce, em vez de booleano, para um segundo clique também
+  // valer — e zero significa "nenhum pedido", o que evita marcar como visitado
+  // um módulo que o aluno nunca abriu.
+  useEffect(() => {
+    if (abrirDesafio > 0) irPara('desafio')
+  }, [abrirDesafio])
+
   return (
     <>
-    <nav className="secoes" aria-label="Seções do módulo">
-      <div className="secoes-topo">
-        <span className="secoes-rotulo">MÓDULO 04 · EQUILÍBRIO DE MERCADO</span>
-        <span className="secoes-progresso">{concluidas} de {SECOES.length} concluídas</span>
-      </div>
-      <div className="secoes-barra">
-        <i style={{ width: `${(concluidas / SECOES.length) * 100}%` }} />
-      </div>
-      <ul>
-        {SECOES.map(sec => (
-          <li key={sec.id}>
-            <button
-              className={`secao-item ${secao === sec.id ? 'ativa' : ''}`}
-              onClick={() => irPara(sec.id)}
-              aria-current={secao === sec.id ? 'step' : undefined}
-            >
-              <span className={`secao-check ${secaoOk[sec.id] ? 'feito' : ''}`} aria-hidden="true">
-                {secaoOk[sec.id] ? '✓' : '○'}
-              </span>
-              <span className="secao-num">{sec.numero}</span>
-              <span className="secao-titulo">{sec.titulo}</span>
-              {sec.id === 'desafio' && (
-                <span className="secao-contador">{feitas.length}/{METAS.length}</span>
-              )}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <SecoesDoModulo
+      rotulo="MÓDULO 04 · EQUILÍBRIO DE MERCADO"
+      secoes={SECOES}
+      ativa={secao}
+      concluidas={secaoOk}
+      contador={`${feitas.length}/${METAS.length}`}
+      onIr={irPara}
+    />
 
     {secao === 'conceito' && (
       <Conceito lido={conceitoLido} onLido={() => { setConceitoLido(true); irPara('laboratorio') }} />
