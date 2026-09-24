@@ -6,12 +6,14 @@ import { usePersistido } from '../shared/persistencia.js'
 import { gerarRodada, resolver, enunciado, RELACOES } from './pares-demanda.js'
 import {
   situacao,
-  EFEITO_RENDA,
   EFEITO_SUBSTITUTO,
   EFEITO_COMPLEMENTAR,
   EFEITO_PRODUCAO,
   PRECO_MIN,
   PRECO_MAX,
+  TIPOS_DE_BEM,
+  TIPOS_DE_BEM_IDS,
+  efeitoDaRenda,
 } from '../shared/modelo.js'
 
 const SECOES = [
@@ -22,7 +24,7 @@ const SECOES = [
 
 const ROTULO_RELACAO = { substituto: 'Substitutos', complementar: 'Complementares' }
 
-const CENARIO_PADRAO = { preco: 28, renda: 0, substituto: 0, complementar: 0, producao: 0 }
+const CENARIO_PADRAO = { preco: 28, renda: 0, substituto: 0, complementar: 0, producao: 0, tipoBem: 'normal' }
 
 const LEITURA = {
   escassez: { rotulo: 'Escassez', texto: 'Consumidores querem mais do que empresas oferecem.', cor: 'coral' },
@@ -36,6 +38,7 @@ export default function LabSubstitutos({ inicial = CENARIO_PADRAO }) {
   const [substituto, setSubstituto] = useState(inicial.substituto)
   const [complementar, setComplementar] = useState(inicial.complementar)
   const [producao, setProducao] = useState(inicial.producao)
+  const [tipoBem, setTipoBem] = useState(inicial.tipoBem ?? 'normal')
   const [secao, setSecao] = useState('conceito')
   const [conceitoLido, setConceitoLido] = usePersistido('microlab:demanda-oferta:conceito', false)
   const [labVisitado, setLabVisitado] = usePersistido('microlab:demanda-oferta:lab', false)
@@ -45,8 +48,10 @@ export default function LabSubstitutos({ inicial = CENARIO_PADRAO }) {
 
   // Um substituto mais caro empurra consumidores para cá (desloca a demanda à
   // direita); um complementar mais caro derruba o consumo conjunto (à esquerda).
+  // O efeito da renda depende do TIPO do bem: sobe com ela num bem normal, não
+  // se move num saciado, e cai num inferior.
   const deslocDemanda =
-    renda * EFEITO_RENDA + substituto * EFEITO_SUBSTITUTO - complementar * EFEITO_COMPLEMENTAR
+    efeitoDaRenda(tipoBem, renda) + substituto * EFEITO_SUBSTITUTO - complementar * EFEITO_COMPLEMENTAR
   const deslocOferta = producao * EFEITO_PRODUCAO
 
   const mercado = useMemo(
@@ -60,6 +65,7 @@ export default function LabSubstitutos({ inicial = CENARIO_PADRAO }) {
     setSubstituto(CENARIO_PADRAO.substituto)
     setComplementar(CENARIO_PADRAO.complementar)
     setProducao(CENARIO_PADRAO.producao)
+    setTipoBem(CENARIO_PADRAO.tipoBem)
   }
 
   const acertos = rodada.filter(caso => respostas[caso.id] === resolver(caso).relacao).length
@@ -150,8 +156,21 @@ export default function LabSubstitutos({ inicial = CENARIO_PADRAO }) {
 
         <div className="divider"><span>DESLOCAMENTOS DE CURVA</span></div>
 
+        <div className="escolha-grupo">
+          <span className="escolha-rotulo">Tipo do bem</span>
+          <div className="escolha-botoes">
+            {TIPOS_DE_BEM_IDS.map(id => (
+              <button key={id} className={tipoBem === id ? 'escolha ativa' : 'escolha'}
+                      onClick={() => setTipoBem(id)} aria-pressed={tipoBem === id}>
+                {TIPOS_DE_BEM[id].rotulo}
+              </button>
+            ))}
+          </div>
+          <small>{TIPOS_DE_BEM[tipoBem].resumo}</small>
+        </div>
+
         <Slider label="Variação na renda" value={renda} min={-30} max={30} suffix="%"
-                onChange={setRenda} hint="Bens normais: renda ↑, demanda ↑" />
+                onChange={setRenda} hint={`Desloca a demanda em ${num(efeitoDaRenda(tipoBem, renda), 1)} mil un.`} />
         <Slider label="Preço do substituto" value={substituto} min={-30} max={30} suffix="%"
                 onChange={setSubstituto} hint="Ex.: café e chá" />
         <Slider label="Preço do complementar" value={complementar} min={-30} max={30} suffix="%"
@@ -206,7 +225,12 @@ export default function LabSubstitutos({ inicial = CENARIO_PADRAO }) {
       <span className="spark">✦</span>
       <p>
         <b>Leitura do cenário:</b> {leitura.texto}
-        {renda > 0 && ' O aumento de renda deslocou a demanda para a direita.'}
+        {renda !== 0 && tipoBem === 'normal' &&
+          ` Sendo um bem normal, a renda ${renda > 0 ? 'em alta empurrou a demanda para a direita' : 'em baixa puxou a demanda para a esquerda'}.`}
+        {renda !== 0 && tipoBem === 'saciado' &&
+          ' Num bem saciado a renda não muda nada: o consumidor já está satisfeito.'}
+        {renda !== 0 && tipoBem === 'inferior' &&
+          ` Sendo um bem inferior, a renda ${renda > 0 ? 'em alta REDUZIU a demanda — o consumidor trocou por algo melhor' : 'em baixa AUMENTOU a demanda — o consumidor desceu de alternativa'}.`}
         {substituto > 0 && ' Um substituto mais caro torna o café relativamente mais atraente.'}
         {complementar > 0 && ' Um complementar mais caro reduz o interesse pelo produto.'}
         {producao > 0 && ' Melhores condições de produção expandem a oferta.'}
