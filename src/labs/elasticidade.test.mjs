@@ -3,6 +3,17 @@ import assert from 'node:assert/strict'
 import { elasticidadePreco, classificarElasticidade, precoChoke } from '../shared/modelo.js'
 import { gerarCaso, gerarRodada, resolver, enunciado, TIPOS_SORTEAVEIS } from './casos-elasticidade.js'
 
+// Gerador pseudoaleatório determinístico. Um rng CONSTANTE faria `sortear`
+// escolher sempre o mesmo índice em todas as listas, testando só a diagonal da
+// grade — foi assim que um caso inválido passou despercebido antes.
+function rngSemente(semente) {
+  let estado = semente
+  return () => {
+    estado = (estado * 1664525 + 1013904223) % 4294967296
+    return estado / 4294967296
+  }
+}
+
 test('elasticidade sai negativa e cresce em módulo com o preço', () => {
   const barato = elasticidadePreco(12, 14)
   const caro = elasticidadePreco(30, 40)
@@ -36,7 +47,7 @@ test('todo caso gerado é válido e do tipo pedido', () => {
   const passos = 400
   for (const tipo of TIPOS_SORTEAVEIS) {
     for (let i = 0; i < passos; i++) {
-      const rng = () => ((i * 2654435761) % 1000) / 1000
+      const rng = rngSemente(i + 1)
       const caso = gerarCaso(tipo, rng)
       const r = resolver(caso)
 
