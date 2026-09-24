@@ -10,15 +10,6 @@ conversa que o originou.
 
 ## Conteúdo
 
-### Cobrir bens inferiores e saciados
-`docs/conteudo/03-demanda-e-oferta.md` registra a lacuna: o modelo em `shared/modelo.js` só
-tem bem normal (renda ↑ → demanda ↑). A ementa trata as duas exceções — bens saciados, em que
-mais renda não muda o consumo, e bens inferiores, em que a demanda **cai** quando a renda
-sobe.
-
-É também pré-requisito do tema 5: a elasticidade-renda negativa é justamente o que define bem
-inferior, e sem modelar o caso o lab de elasticidades não consegue mostrá-lo.
-
 ### Cenários prontos de choque no lab de equilíbrio
 `docs/conteudo/04-equilibrio-de-mercado.md` lista os quatro casos (oferta/demanda × aumenta/
 diminui). Hoje o aluno monta cada um no slider; botões de cenário deixariam a comparação
