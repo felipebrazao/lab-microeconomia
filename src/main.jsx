@@ -5,6 +5,7 @@ import LabSubstitutos from './labs/substitutos.jsx'
 import LabEquilibrio from './labs/equilibrio.jsx'
 import LabElasticidades from './labs/elasticidades.jsx'
 import LabConsumidor from './labs/consumidor.jsx'
+import LabOportunidade from './labs/oportunidade.jsx'
 import { equilibrio } from './shared/modelo.js'
 import { num } from './shared/formato.js'
 
@@ -23,7 +24,8 @@ const TEMAS = [
     id: 'custo-oportunidade',
     numero: '01',
     aba: 'Custo de oportunidade',
-    emBreve: true,
+    titulo: <>Toda escolha<br /><em>abre mão de outra.</em></>,
+    descricao: 'O que uma decisão custa não é o dinheiro que sai do bolso: é o valor da melhor alternativa que ficou para trás.',
   },
   {
     id: 'consumidor',
@@ -141,6 +143,9 @@ function App() {
         ))}
       </nav>
 
+      <div className={aba === 'custo-oportunidade' ? 'lab-painel' : 'lab-painel oculto'}>
+        <LabOportunidade />
+      </div>
       <div className={aba === 'consumidor' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabConsumidor />
       </div>
