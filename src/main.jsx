@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './styles.css'
 import LabSubstitutos from './labs/substitutos.jsx'
 import LabEquilibrio from './labs/equilibrio.jsx'
+import LabElasticidades from './labs/elasticidades.jsx'
 import { equilibrio } from './shared/modelo.js'
 import { num } from './shared/formato.js'
 
@@ -47,7 +48,8 @@ const TEMAS = [
     id: 'elasticidades',
     numero: '05',
     aba: 'Elasticidades',
-    emBreve: true,
+    titulo: <>Não basta a direção,<br /><em>falta a intensidade.</em></>,
+    descricao: 'Demanda e oferta dizem para onde a quantidade se move. A elasticidade diz o quanto — e é ela que decide se baixar o preço aumenta ou derruba a receita.',
   },
   {
     id: 'estruturas',
@@ -142,6 +144,9 @@ function App() {
       </div>
       <div className={aba === 'equilibrio' ? 'lab-painel' : 'lab-painel oculto'}>
         <LabEquilibrio />
+      </div>
+      <div className={aba === 'elasticidades' ? 'lab-painel' : 'lab-painel oculto'}>
+        <LabElasticidades />
       </div>
     </section>
 

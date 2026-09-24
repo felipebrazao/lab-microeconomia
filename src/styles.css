@@ -1291,3 +1291,143 @@ footer b {
     padding: 24px 20px;
   }
 }
+
+/* ================================================================== */
+/* Tema 5 — barras de variação e casos do desafio                     */
+/* ================================================================== */
+.barras {
+  margin: 24px 0 8px;
+}
+
+.barra-linha {
+  display: grid;
+  grid-template-columns: 88px 1fr 72px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.barra-rotulo {
+  font: 10px 'DM Mono', monospace;
+  letter-spacing: .08em;
+  color: #788789;
+}
+
+.barra-trilho {
+  position: relative;
+  height: 26px;
+  background: #f0f2e9;
+}
+
+.barra-zero {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #b9c2bb;
+}
+
+.barra-preenche {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  background: var(--teal);
+  transition: width .18s;
+}
+
+.barra-preenche.negativa {
+  background: var(--coral);
+}
+
+.barra-valor {
+  font: 12px 'DM Mono', monospace;
+  text-align: right;
+  font-weight: 500;
+}
+
+.barras-legenda {
+  font-size: 11px;
+  line-height: 1.55;
+  color: #748083;
+  margin: 0 0 4px 100px;
+}
+
+/* Casos do desafio */
+.casos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.caso {
+  border-left: 3px solid #cbd2cb;
+  background: #f7f8f0;
+  padding: 14px 16px;
+}
+
+.caso > p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 11px;
+}
+
+.caso-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.caso-op {
+  border: 1px solid #cbd2cb;
+  background: var(--paper);
+  color: #476366;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 7px 13px;
+}
+
+.caso-op:hover:not(:disabled) {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.caso-op.escolhida {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.caso-op:disabled {
+  cursor: default;
+  opacity: .55;
+}
+
+.caso-feedback {
+  font: 11px 'DM Mono', monospace;
+  line-height: 1.6;
+  margin: 11px 0 0;
+  color: #647476;
+}
+
+.caso.certo {
+  border-left-color: var(--teal);
+  background: #dcebe1;
+}
+
+.caso.errado {
+  border-left-color: var(--coral);
+}
+
+@media (max-width: 560px) {
+  .barra-linha {
+    grid-template-columns: 62px 1fr 60px;
+    gap: 8px;
+  }
+
+  .barras-legenda {
+    margin-left: 0;
+  }
+}
