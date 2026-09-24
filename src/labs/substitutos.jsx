@@ -3,6 +3,7 @@ import Slider from '../shared/Slider.jsx'
 import Chart from '../shared/Chart.jsx'
 import { num } from '../shared/formato.js'
 import { usePersistido } from '../shared/persistencia.js'
+import SecoesDoModulo from '../shared/SecoesDoModulo.jsx'
 import { gerarRodada, resolver, enunciado, RELACOES } from './pares-demanda.js'
 import {
   situacao,
@@ -81,7 +82,6 @@ export default function LabSubstitutos({ abrirDesafio = 0 }) {
   }
 
   const secaoOk = { conceito: conceitoLido, laboratorio: labVisitado, desafio: rodadas > 0 }
-  const concluidas = SECOES.filter(sec => secaoOk[sec.id]).length
 
   const irPara = id => {
     setSecao(id)
@@ -100,33 +100,14 @@ export default function LabSubstitutos({ abrirDesafio = 0 }) {
 
   return (
     <>
-    <nav className="secoes" aria-label="Seções do módulo">
-      <div className="secoes-topo">
-        <span className="secoes-rotulo">MÓDULO 03 · DEMANDA E OFERTA</span>
-        <span className="secoes-progresso">{concluidas} de {SECOES.length} concluídas</span>
-      </div>
-      <div className="secoes-barra">
-        <i style={{ width: `${(concluidas / SECOES.length) * 100}%` }} />
-      </div>
-      <ul>
-        {SECOES.map(sec => (
-          <li key={sec.id}>
-            <button
-              className={`secao-item ${secao === sec.id ? 'ativa' : ''}`}
-              onClick={() => irPara(sec.id)}
-              aria-current={secao === sec.id ? 'step' : undefined}
-            >
-              <span className={`secao-check ${secaoOk[sec.id] ? 'feito' : ''}`} aria-hidden="true">
-                {secaoOk[sec.id] ? '✓' : '○'}
-              </span>
-              <span className="secao-num">{sec.numero}</span>
-              <span className="secao-titulo">{sec.titulo}</span>
-              {sec.id === 'desafio' && <span className="secao-contador">{acertos}/{rodada.length}</span>}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <SecoesDoModulo
+      rotulo="MÓDULO 03 · DEMANDA E OFERTA"
+      secoes={SECOES}
+      ativa={secao}
+      concluidas={secaoOk}
+      contador={`${acertos}/${rodada.length}`}
+      onIr={irPara}
+    />
 
     {secao === 'conceito' && (
       <div className="conceito">
