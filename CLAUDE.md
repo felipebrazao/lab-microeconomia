@@ -78,7 +78,9 @@ Os labs compartilham o mesmo mercado (café) e as mesmas curvas, vindas de `shar
   `@vitejs/plugin-react` 6.1.1) — sem `^` e sem `latest`. Num projeto sem testes, um salto de
   major silencioso só apareceria em runtime. Atualizar é ato deliberado: mude a versão e
   verifique. Não afrouxe para faixas sem combinar.
-- Sem testes, sem linter, sem formatter configurados.
+- **Testes com o runner nativo do Node** (`npm test`) — sem framework e sem dependência.
+  Cobrem a lógica pura: o modelo econômico e os predicados de avaliação, que são funções
+  sem React e por isso verificáveis sem montar nada. Sem linter e sem formatter.
 - **`vite.config.js`** carrega o `@vitejs/plugin-react`, o que habilita **Fast Refresh**:
   ao editar um componente, o estado dos sliders do laboratório é preservado em vez de a
   página recarregar inteira. O plugin não altera o bundle de produção — só o dev.
@@ -229,4 +231,4 @@ Já resolvido:
 Se o build voltar a falhar com `Permission denied` no `.bin/vite` ou com erro de carga de
 binding nativo, a causa é essa e a correção é reinstalar do zero.
 
-Ausências conhecidas: não há CI, deploy, testes nem linter — ver `TODO.md`.
+Ausências conhecidas: não há CI, deploy nem linter — ver `TODO.md`.

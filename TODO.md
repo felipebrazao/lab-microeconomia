@@ -152,5 +152,5 @@ faz sentido antes de o repositório ser compartilhado. Decidir cedo é melhor qu
 ## Infra
 
 ### Sem CI e sem deploy
-Não há pipeline nem publicação configurada. Também não há testes nem linter — o que
-torna qualquer verificação automática dependente de definir primeiro o que verificar.
+Não há pipeline nem publicação configurada. Há testes (`npm test`, runner nativo do Node)
+cobrindo a lógica pura, mas nada roda automaticamente num push. Também não há linter.
