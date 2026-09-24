@@ -1,7 +1,10 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { elasticidadePreco, classificarElasticidade, precoChoke } from '../shared/modelo.js'
-import { gerarCaso, gerarRodada, resolver, enunciado, TIPOS_SORTEAVEIS } from './casos-elasticidade.js'
+import {
+  gerarCaso, gerarCasoRenda, gerarRodada, resolver, enunciado,
+  TIPOS_SORTEAVEIS, TIPOS_RENDA_SORTEAVEIS,
+} from './casos-elasticidade.js'
 
 // Gerador pseudoaleatório determinístico. Um rng CONSTANTE faria `sortear`
 // escolher sempre o mesmo índice em todas as listas, testando só a diagonal da
@@ -61,7 +64,47 @@ test('todo caso gerado é válido e do tipo pedido', () => {
   }
 })
 
-test('uma rodada traz os três tipos', () => {
-  const tipos = gerarRodada().map(c => resolver(c).tipo).sort()
-  assert.deepEqual(tipos, ['elastica', 'inelastica', 'unitaria'])
+test('todo caso de renda gerado é válido e do tipo pedido', () => {
+  for (const tipo of TIPOS_RENDA_SORTEAVEIS) {
+    for (let i = 0; i < 300; i++) {
+      const caso = gerarCasoRenda(tipo, rngSemente(i + 1))
+      const r = resolver(caso)
+
+      assert.equal(r.medida, 'renda')
+      assert.equal(r.tipo, tipo, `pediu ${tipo} e veio ${r.tipo} (E=${r.valor})`)
+      assert.ok(Number.isInteger(caso.varRenda) && caso.varRenda !== 0, `variação de renda inválida: ${caso.varRenda}`)
+      assert.ok(Number.isInteger(caso.qPara) && caso.qPara > 0)
+      assert.ok(Math.abs(r.valor) <= 3, `elasticidade fora da faixa didática: ${r.valor}`)
+      // a unidade tem de bater: pontos percentuais no enunciado, fração na conta
+      assert.ok(enunciado(caso).includes(`${Math.abs(caso.varRenda)}%`), `enunciado não bate: ${enunciado(caso)}`)
+    }
+  }
+})
+
+// Só a elasticidade-renda tem esta classe, e é ela que justifica os bens
+// inferiores existirem no modelo.
+test('bem inferior é sorteável, e só na medida de renda', () => {
+  assert.ok(TIPOS_RENDA_SORTEAVEIS.includes('inferior'))
+  assert.ok(!TIPOS_SORTEAVEIS.includes('inferior'))
+
+  const caso = gerarCasoRenda('inferior', rngSemente(7))
+  const r = resolver(caso)
+  assert.ok(r.valor < 0, 'bem inferior tem elasticidade-renda negativa')
+  assert.equal(Math.sign(caso.varRenda) === Math.sign(caso.qPara - caso.qDe), false,
+    'renda e quantidade andam em sentidos opostos')
+})
+
+test('uma rodada cobre as duas medidas, sem repetir tipo dentro de cada uma', () => {
+  for (let i = 0; i < 200; i++) {
+    const rodada = gerarRodada(rngSemente(i + 1))
+    assert.equal(rodada.length, 4)
+
+    const porMedida = { preco: [], renda: [] }
+    for (const caso of rodada) porMedida[resolver(caso).medida].push(resolver(caso).tipo)
+
+    assert.equal(porMedida.preco.length, 2, 'faltou caso de elasticidade-preço')
+    assert.equal(porMedida.renda.length, 2, 'faltou caso de elasticidade-renda')
+    assert.equal(new Set(porMedida.preco).size, 2, `repetiu tipo de preço: ${porMedida.preco}`)
+    assert.equal(new Set(porMedida.renda).size, 2, `repetiu tipo de renda: ${porMedida.renda}`)
+  }
 })

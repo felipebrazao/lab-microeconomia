@@ -1794,3 +1794,15 @@ footer b {
     padding: 6px 4px;
   }
 }
+
+/* Etiqueta da medida em cada caso do desafio do tema 5. */
+.caso-medida {
+  display: inline-block;
+  font: 9px 'DM Mono', monospace;
+  letter-spacing: .08em;
+  color: var(--teal);
+  background: #dcebe1;
+  padding: 2px 7px;
+  margin-right: 8px;
+  vertical-align: 1px;
+}
