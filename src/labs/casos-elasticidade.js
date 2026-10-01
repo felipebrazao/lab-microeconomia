@@ -49,6 +49,24 @@ const PARES_POR_TIPO = (() => {
 
 export const TIPOS_SORTEAVEIS = Object.keys(PARES_POR_TIPO)
 
+// Pares para a elasticidade da OFERTA. Preço e quantidade ofertada andam no mesmo
+// sentido, então aqui só entram sinais iguais — o contrário da demanda.
+const PARES_OFERTA_POR_TIPO = (() => {
+  const grupos = { elastica: [], unitaria: [], inelastica: [] }
+  for (const varPreco of VARIACOES) {
+    for (const varQuantidade of VARIACOES) {
+      if (varPreco * varQuantidade <= 0) continue
+      const valor = varQuantidade / varPreco
+      if (Math.abs(valor) > LIMITE_ELASTICIDADE) continue
+      const tipo = classificarElasticidade(valor)
+      if (grupos[tipo]) grupos[tipo].push({ varPreco, varQuantidade })
+    }
+  }
+  return grupos
+})()
+
+export const TIPOS_OFERTA_SORTEAVEIS = Object.keys(PARES_OFERTA_POR_TIPO)
+
 // Pares para a elasticidade-RENDA. Aqui os sinais iguais são permitidos — e são
 // justamente o caso normal. Sinais opostos produzem bem inferior, que é a classe
 // que só existe nesta medida.
@@ -86,6 +104,30 @@ export function gerarCaso(tipo, rng = Math.random) {
   }
 }
 
+const PRODUTORES = [
+  { nome: 'café', unidade: 'sacas' },
+  { nome: 'soja', unidade: 'toneladas' },
+  { nome: 'leite', unidade: 'mil litros' },
+  { nome: 'tomate', unidade: 'caixas' },
+]
+
+export function gerarCasoOferta(tipo, rng = Math.random) {
+  const { varPreco, varQuantidade } = sortear(PARES_OFERTA_POR_TIPO[tipo], rng)
+  const precoDe = sortear(PRECOS, rng)
+  const qDe = sortear(QUANTIDADES, rng)
+  const produtor = sortear(PRODUTORES, rng)
+
+  return {
+    id: `oferta-${tipo}-${precoDe}-${qDe}-${varPreco}-${varQuantidade}`,
+    medida: 'oferta',
+    mercado: produtor,
+    precoDe,
+    precoPara: Math.round(precoDe * (1 + varPreco)),
+    qDe,
+    qPara: Math.round(qDe * (1 + varQuantidade)),
+  }
+}
+
 export function gerarCasoRenda(tipo, rng = Math.random) {
   const { varRenda, varQuantidade } = sortear(PARES_RENDA_POR_TIPO[tipo], rng)
   const qDe = sortear(QUANTIDADES, rng)
@@ -113,13 +155,14 @@ function tiposDistintos(lista, quantos, rng) {
   })
 }
 
-// Uma rodada cobre as DUAS medidas: duas de elasticidade-preço e duas de
-// elasticidade-renda. Sem as de renda, o módulo apresentaria a medida no
+// Uma rodada cobre as TRÊS medidas da aula: duas de elasticidade-preço da
+// demanda, duas de elasticidade da oferta e duas de elasticidade-renda. Sem as de renda, o módulo apresentaria a medida no
 // laboratório e nunca a cobraria — e a classe "bem inferior", que só existe
 // nela, jamais seria avaliada.
 export function gerarRodada(rng = Math.random) {
   const casos = [
     ...tiposDistintos(TIPOS_SORTEAVEIS, 2, rng).map(tipo => gerarCaso(tipo, rng)),
+    ...tiposDistintos(TIPOS_OFERTA_SORTEAVEIS, 2, rng).map(tipo => gerarCasoOferta(tipo, rng)),
     ...tiposDistintos(TIPOS_RENDA_SORTEAVEIS, 2, rng).map(tipo => gerarCasoRenda(tipo, rng)),
   ]
   for (let i = casos.length - 1; i > 0; i--) {
@@ -135,6 +178,10 @@ export function enunciado(caso) {
     const verbo = caso.varRenda > 0 ? 'subiu' : 'caiu'
     return `A renda dos consumidores ${verbo} ${Math.abs(caso.varRenda)}%. ` +
       `As vendas de ${mercado.nome} foram de ${qDe} para ${qPara} ${mercado.unidade}.`
+  }
+  if (caso.medida === 'oferta') {
+    return `Os produtores de ${mercado.nome} ofertavam ${qDe} ${mercado.unidade} a R$ ${caso.precoDe}. ` +
+      `O preço passou para R$ ${caso.precoPara} e a quantidade ofertada foi para ${qPara}.`
   }
   return `Um mercado de ${mercado.nome} vendia ${qDe} ${mercado.unidade} a R$ ${caso.precoDe}. ` +
     `O preço passou para R$ ${caso.precoPara} e as vendas foram para ${qPara}.`
@@ -152,5 +199,5 @@ export function resolver(caso) {
 
   const varBase = variacao(caso.precoDe, caso.precoPara)
   const valor = varQuantidade / varBase
-  return { medida: 'preco', varBase, varQuantidade, valor, tipo: classificarElasticidade(valor) }
+  return { medida: caso.medida ?? 'preco', varBase, varQuantidade, valor, tipo: classificarElasticidade(valor) }
 }

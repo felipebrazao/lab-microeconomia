@@ -12,6 +12,47 @@ const ALTERNATIVAS_PADRAO = [
   { id: 'plantio', uso: 'Arrendar a área para plantio', valor: 240 },
 ]
 
+// Dois produtores do exemplo do conceito. Cada um gasta todos os recursos num bem
+// ou noutro, e a fronteira é a reta entre esses dois máximos. O custo de 1 saca de
+// café é cacauMax / cafeMax sacas de cacau: 2 para Ana, 1 para Bruno.
+const PRODUTORES = [
+  { nome: 'Ana', cafeMax: 60, cacauMax: 120, cor: 'a' },
+  { nome: 'Bruno', cafeMax: 40, cacauMax: 40, cor: 'b' },
+]
+
+// Escala fixa da figura: café na horizontal até 70 sacas, cacau na vertical até 140.
+const FPP = { largura: 320, altura: 220, esq: 40, dir: 16, topo: 14, base: 30, cafe: 70, cacau: 140 }
+const xCafe = c => FPP.esq + c / FPP.cafe * (FPP.largura - FPP.esq - FPP.dir)
+const yCacau = c => FPP.altura - FPP.base - c / FPP.cacau * (FPP.altura - FPP.topo - FPP.base)
+
+function FronteiraDeProducao() {
+  return (
+    <figure className="fpp">
+      <svg viewBox={`0 0 ${FPP.largura} ${FPP.altura}`} role="img"
+           aria-label="Fronteiras de possibilidades de produção de Ana e Bruno">
+        {[40, 80, 120].map(c => (
+          <text key={c} x={FPP.esq - 7} y={yCacau(c) + 3} className="tick-text" textAnchor="end">{c}</text>
+        ))}
+        {[20, 40, 60].map(c => (
+          <text key={c} x={xCafe(c)} y={FPP.altura - FPP.base + 14} className="tick-text" textAnchor="middle">{c}</text>
+        ))}
+        <path d={`M ${FPP.esq} ${FPP.topo} V ${FPP.altura - FPP.base} H ${FPP.largura - FPP.dir}`} className="axis" />
+        <text x={FPP.esq + 8} y={FPP.topo + 6} className="tick-text">CACAU</text>
+        <text x={FPP.largura - FPP.dir} y={FPP.altura - FPP.base - 8} className="tick-text" textAnchor="end">CAFÉ</text>
+        {PRODUTORES.map(p => (
+          <g key={p.nome}>
+            <line x1={xCafe(0)} y1={yCacau(p.cacauMax)} x2={xCafe(p.cafeMax)} y2={yCacau(0)} className={`fpp-linha ${p.cor}`} />
+            <text x={xCafe(p.cafeMax / 2) + 6} y={yCacau(p.cacauMax / 2) - 6} className={`fpp-nome ${p.cor}`}>
+              {p.nome.toUpperCase()}
+            </text>
+          </g>
+        ))}
+      </svg>
+      <figcaption>Sacas que cada um consegue produzir com os próprios recursos.</figcaption>
+    </figure>
+  )
+}
+
 const SECOES = [
   { id: 'conceito', numero: '1.0', titulo: 'Conceito' },
   { id: 'laboratorio', numero: '1.1', titulo: 'Laboratório' },
@@ -95,6 +136,25 @@ export default function LabOportunidade({ abrirDesafio = 0 }) {
           Por isso o que importa é o <b>ganho líquido</b>: o retorno da escolha menos o da melhor
           abandonada. Se der negativo, a decisão custou a diferença, mesmo que o caixa esteja
           positivo. É o que explica por que "de graça" quase nunca é de graça.
+        </p>
+        <p>
+          Na produção, o mesmo raciocínio é um <b>trade-off</b>: o custo de oportunidade é o que se
+          deixou de produzir ao <b>transferir recursos de uma atividade para outra</b>. Ana, com os
+          recursos que tem, produz 60 sacas de café ou 120 de cacau, ou qualquer combinação entre
+          os dois. Cada saca de café custa a ela <b>2 sacas de cacau</b> — o custo medido em
+          unidades do outro bem.
+        </p>
+        <p>
+          Ligando as combinações possíveis, obtém-se a <b>fronteira de possibilidades de
+          produção</b>. Bruno, vizinho de Ana, produz 40 sacas de café ou 40 de cacau: para ele, uma
+          saca de café custa só 1 de cacau. Fronteiras diferentes, custos diferentes.
+        </p>
+        <FronteiraDeProducao />
+        <p>
+          É essa diferença que torna a <b>troca</b> vantajosa. Se Bruno vende café a Ana por 1,5
+          saca de cacau, ele recebe mais do que o café lhe custa (1), e ela paga menos do que
+          custaria produzi-lo (2). A troca compensa para os dois sempre que o preço combinado fica
+          entre os custos de oportunidade de cada um.
         </p>
         <button className="button primary" onClick={() => { setConceitoLido(true); irPara('laboratorio') }}>
           {conceitoLido ? 'Reler e ir ao laboratório' : 'Entendi, ir ao laboratório'} <span>→</span>

@@ -67,14 +67,12 @@ E = Var% Qd / Var% Renda
 Positiva para **bens normais**. **Negativa para bens inferiores** — a quantidade cai quando a
 renda sobe. É o teste que distingue os dois.
 
-## Elasticidade-cruzada
-
-Resposta da demanda de um bem à variação do preço de **outro**. Positiva para substitutos,
-negativa para complementares — a formalização do que o tema 3 introduziu qualitativamente.
-
 ## Estado no MicroLab
 
-`labs/elasticidades.jsx` cobre a **elasticidade-preço da demanda**, em três seções.
+`labs/elasticidades.jsx` cobre as três medidas dos slides — **elasticidade-preço da demanda**,
+**elasticidade da oferta** e **elasticidade-renda** —, em três seções. O conceito (5.0) traz
+também os casos extremos e os fatores que afetam a elasticidade, como texto: a curva do lab é
+uma reta inclinada e não vira vertical nem horizontal.
 
 O laboratório não usa diagrama de Marshall: elasticidade é razão entre duas variações, e a
 forma que mostra isso são duas barras a partir de um zero central — a maior manda. O aluno
@@ -91,15 +89,18 @@ demandada é zero e a elasticidade deixa de existir.
 O desafio sorteia os casos a cada rodada, sem banco de perguntas, e conta rodadas fechadas
 para o aluno poder treinar repetidamente.
 
-O laboratório alterna entre **elasticidade-preço** e **elasticidade-renda** no mesmo par de
-barras. A diferença entre as duas está no tratamento do sinal: na de preço ele é ruído, e a
+O laboratório alterna entre as três medidas no mesmo par de barras. A diferença entre as duas está no tratamento do sinal: na de preço ele é ruído, e a
 classificação usa o módulo; na de renda **o sinal é a informação** — negativo identifica bem
 inferior, e por isso ela tem uma classe a mais.
 
 Na leitura visual, barras no mesmo sentido indicam bem normal; em sentidos opostos, bem
 inferior.
 
-O desafio sorteia quatro casos por rodada, dois de cada medida. A opção "bem inferior" só
-aparece nos de renda.
+**Oferta.** A reta de oferta corta o eixo da quantidade, então sem choque ela é sempre
+inelástica — o aluno nunca veria as outras classes. Por isso o modo oferta traz o controle de
+**condições de produção**, o mesmo choque do tema 3: com o preço de R$ 20 para R$ 30, choque 0
+dá inelástica (0,74), −15% dá unitária (1,00) e −30% dá elástica (1,55). Na oferta o sinal é
+positivo — preço e quantidade andam juntos — e a classificação é a mesma da demanda.
 
-**Ainda não cobre:** elasticidade da oferta e elasticidade-cruzada.
+O desafio sorteia seis casos por rodada, dois de cada medida. A opção "bem inferior" só
+aparece nos de renda.

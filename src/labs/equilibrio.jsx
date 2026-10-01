@@ -5,6 +5,7 @@ import { num } from '../shared/formato.js'
 import { usePersistido } from '../shared/persistencia.js'
 import SecoesDoModulo from '../shared/SecoesDoModulo.jsx'
 import { METAS } from './metas-equilibrio.js'
+import { CENARIOS, choquesDo } from './cenarios-equilibrio.js'
 import {
   situacao,
   proximoPreco,
@@ -13,9 +14,14 @@ import {
   PRECO_MIN,
   PRECO_MAX,
   TOLERANCIA_FOLGA,
+  equilibrio,
 } from '../shared/modelo.js'
 
 const PRECO_INICIAL = 34
+
+// Um cenário da aula parte do equilíbrio de antes do choque, no passo do slider:
+// assim o aluno vê o choque abrir a folga e pode deixar o mercado ajustar.
+const PRECO_ANTES_DO_CHOQUE = Math.round(equilibrio().preco * 10) / 10
 // Intervalo entre passos da animação de ajuste. Com ~30% da folga fechada por
 // passo, a convergência leva de 11 a 16 passos: meio segundo, tempo de ver o
 // preço caminhando sem que a espera canse.
@@ -54,6 +60,7 @@ export default function LabEquilibrio({ abrirDesafio = 0 }) {
   const [preco, setPreco] = useState(PRECO_INICIAL)
   const [choqueDemanda, setChoqueDemanda] = useState(0)
   const [choqueOferta, setChoqueOferta] = useState(0)
+  const [cenarioId, setCenarioId] = useState(null)
   const [ajustando, setAjustando] = useState(false)
   const [secao, setSecao] = useState('conceito')
   const [conceitoLido, setConceitoLido] = usePersistido('microlab:equilibrio:conceito', false)
@@ -107,14 +114,27 @@ export default function LabEquilibrio({ abrirDesafio = 0 }) {
 
   const mudarChoque = setter => valor => {
     setInteragiu(true)
+    setCenarioId(null)
     setter(valor)
   }
+
+  const aplicarCenario = c => {
+    const choques = choquesDo(c)
+    setInteragiu(true)
+    setAjustando(false)
+    setCenarioId(c.id)
+    setPreco(PRECO_ANTES_DO_CHOQUE)
+    setChoqueDemanda(choques.demanda)
+    setChoqueOferta(choques.oferta)
+  }
+  const cenario = CENARIOS.find(c => c.id === cenarioId)
 
   const restaurar = () => {
     setAjustando(false)
     setPreco(PRECO_INICIAL)
     setChoqueDemanda(0)
     setChoqueOferta(0)
+    setCenarioId(null)
   }
 
   const leitura = LEITURA[mercado.tipo]
@@ -179,6 +199,23 @@ export default function LabEquilibrio({ abrirDesafio = 0 }) {
 
         <div className="divider"><span>DESLOCAMENTOS DE CURVA</span></div>
 
+        <div className="escolha-grupo">
+          <span className="escolha-rotulo">Casos da aula</span>
+          <div className="escolha-botoes em-grade">
+            {CENARIOS.map(c => (
+              <button key={c.id} className={cenarioId === c.id ? 'escolha ativa' : 'escolha'}
+                      onClick={() => aplicarCenario(c)} aria-pressed={cenarioId === c.id}>
+                {c.rotulo}
+              </button>
+            ))}
+          </div>
+          <small>
+            {cenario
+              ? `${cenario.titulo}: choque de ${cenario.curva} aplicado a partir do equilíbrio anterior.`
+              : 'Cada caso desloca uma curva a partir do equilíbrio. Depois, deixe o mercado ajustar.'}
+          </small>
+        </div>
+
         <Slider
           label="Choque de demanda"
           value={choqueDemanda}
@@ -204,7 +241,7 @@ export default function LabEquilibrio({ abrirDesafio = 0 }) {
       <div className="market-panel">
         <div className="market-header">
           <div>
-            <span className="market-label">MERCADO DE CAFÉ</span>
+            <span className="market-label">{cenario ? `CASO DA AULA · ${cenario.rotulo.toUpperCase()}` : 'MERCADO DE CAFÉ'}</span>
             <h3>Onde oferta e demanda se encontram</h3>
           </div>
           <div className={`market-status ${COR_STATUS[mercado.tipo]}`}>
@@ -249,6 +286,7 @@ export default function LabEquilibrio({ abrirDesafio = 0 }) {
       <span className="spark">✦</span>
       <p>
         <b>Leitura do cenário:</b>{' '}
+        {cenario && `${cenario.titulo}. ${cenario.leitura} `}
         {mercado.tipo === 'equilibrio'
           ? `A R$ ${num(preco, 1)} o mercado está em repouso: ${num(mercado.qd)} mil unidades trocam de mãos. ${leitura.pressao}`
           : `A R$ ${num(preco, 1)}, os consumidores querem ${num(mercado.qd)} mil unidades e as empresas oferecem ${num(mercado.qs)} mil — uma diferença de ${num(Math.abs(mercado.folga))} mil. ${leitura.pressao} O equilíbrio está em R$ ${num(mercado.equilibrio.preco, 2)}, ${distancia > 0 ? 'abaixo' : 'acima'} do preço praticado.`}
@@ -280,6 +318,13 @@ function Conceito({ lido, onLido }) {
         Um choque de renda, custo ou clima <b>desloca a curva inteira</b> e move o ponto de
         equilíbrio de lugar — diferente de mudar o preço praticado, que apenas desliza o ponto
         ao longo da curva.
+      </p>
+      <p>
+        São quatro casos. Numa <b>supersafra de soja</b>, a oferta aumenta: o preço cai e a
+        quantidade sobe. Numa <b>estiagem</b> que derruba a produção de café, a oferta diminui: o
+        preço sobe e a quantidade cai. Às vésperas do <b>Círio</b>, em Belém, a demanda por pato
+        aumenta: preço e quantidade sobem. Passada a <b>Páscoa</b>, a demanda por ovos de chocolate
+        diminui: preço e quantidade caem. No laboratório, cada caso é um botão.
       </p>
       <button className="button primary" onClick={onLido}>
         {lido ? 'Reler e ir ao laboratório' : 'Entendi, ir ao laboratório'} <span>→</span>

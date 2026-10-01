@@ -120,6 +120,14 @@ export default function LabSubstitutos({ abrirDesafio = 0 }) {
           existe para tornar visível.
         </p>
         <p>
+          Com todo o resto constante — <i>coeteris paribus</i> —, por que a quantidade demandada
+          responde ao preço? Há duas razões. O <b>efeito renda</b>: um preço menor aumenta o poder de
+          compra, e com a mesma renda o consumidor leva mais unidades; um preço maior faz o
+          contrário. O <b>efeito substituição</b>: o bem que encarece perde espaço para um substituto
+          mais barato, e vice-versa. No laboratório, os dois agem juntos quando você move o preço
+          do produto.
+        </p>
+        <p>
           Dois bens são <b>substitutos</b> quando competem: se um encarece, o consumidor migra
           para o outro, e a demanda do outro sobe. São <b>complementares</b> quando se consomem
           juntos: se um encarece, o consumo do par cai junto.
@@ -128,6 +136,12 @@ export default function LabSubstitutos({ abrirDesafio = 0 }) {
           Quanto à renda, a regra é direta — mais renda, mais demanda. Há duas exceções: <b>bens
           saciados</b>, em que o consumidor já está satisfeito, e <b>bens inferiores</b>, cuja
           demanda cai quando a renda sobe, porque ele troca por algo melhor.
+        </p>
+        <p>
+          Do outro lado está a <b>oferta</b>: a quantidade que os produtores desejam vender num
+          período. Ela depende do preço do bem, que move o ponto ao longo da curva, e dos preços dos
+          demais bens e dos <b>fatores de produção</b> — terra, trabalho, tecnologia —, que deslocam
+          a curva inteira. No laboratório, esse deslocamento está nas condições de produção.
         </p>
         <button className="button primary" onClick={() => { setConceitoLido(true); irPara('laboratorio') }}>
           {conceitoLido ? 'Reler e ir ao laboratório' : 'Entendi, ir ao laboratório'} <span>→</span>

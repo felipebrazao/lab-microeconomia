@@ -10,11 +10,6 @@ conversa que o originou.
 
 ## Conteúdo
 
-### Cenários prontos de choque no lab de equilíbrio
-`docs/conteudo/04-equilibrio-de-mercado.md` lista os quatro casos (oferta/demanda × aumenta/
-diminui). Hoje o aluno monta cada um no slider; botões de cenário deixariam a comparação
-entre os quatro imediata.
-
 ### Estreitar o lab de demanda e oferta ao seu tema
 `src/labs/substitutos.jsx` já é módulo próprio, mas segue sendo o lab completo de
 oferta e demanda: o recorte de substitutos e complementares divide espaço com renda e

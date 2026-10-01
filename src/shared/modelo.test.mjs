@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import {
   efeitoDaRenda, equilibrio, demanda, TIPOS_DE_BEM, TIPOS_DE_BEM_IDS,
   elasticidadeRenda, classificarElasticidadeRenda, precoChoke,
+  elasticidadeOferta, classificarElasticidade, EFEITO_PRODUCAO,
 } from './modelo.js'
 
 test('renda em alta separa os três tipos de bem', () => {
@@ -91,4 +92,30 @@ test('o valor depende do preço, porque a base de quantidade muda', () => {
 test('sem variação de renda, ou sem demanda, a elasticidade-renda não existe', () => {
   assert.equal(classificarElasticidadeRenda(elasticidadeRenda('normal', 0, 28).valor), 'indefinida')
   assert.equal(classificarElasticidadeRenda(elasticidadeRenda('normal', 20, precoChoke() + 4).valor), 'indefinida')
+})
+
+// --- elasticidade da oferta -----------------------------------------------
+
+test('elasticidade da oferta é positiva: preço e quantidade ofertada andam juntos', () => {
+  const e = elasticidadeOferta(20, 30)
+  assert.ok(e.valor > 0)
+  assert.ok(e.qPara > e.qDe)
+})
+
+// A reta de oferta do modelo corta o eixo da quantidade, e reta assim é sempre
+// inelástica. Este teste fixa isso para ninguém "descobrir" depois que a oferta
+// nunca sai de inelástica e achar que é bug.
+test('sem choque, a oferta do modelo é sempre inelástica', () => {
+  for (let a = 8; a < 46; a += 2) {
+    for (let b = a + 2; b <= 46; b += 2) {
+      assert.equal(classificarElasticidade(elasticidadeOferta(a, b).valor), 'inelastica', `R$ ${a} → ${b}`)
+    }
+  }
+})
+
+test('o choque de produção leva a oferta às três classes da aula', () => {
+  const classe = choque => classificarElasticidade(elasticidadeOferta(20, 30, choque * EFEITO_PRODUCAO).valor)
+  assert.equal(classe(0), 'inelastica')
+  assert.equal(classe(-15), 'unitaria')
+  assert.equal(classe(-30), 'elastica')
 })

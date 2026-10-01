@@ -6,6 +6,7 @@ import SecoesDoModulo from '../shared/SecoesDoModulo.jsx'
 import {
   elasticidadePreco, classificarElasticidade, precoChoke, PRECO_MIN,
   elasticidadeRenda, classificarElasticidadeRenda, TIPOS_DE_BEM, TIPOS_DE_BEM_IDS,
+  elasticidadeOferta, EFEITO_PRODUCAO,
 } from '../shared/modelo.js'
 import { gerarRodada, resolver, enunciado } from './casos-elasticidade.js'
 
@@ -39,6 +40,20 @@ const TIPOS = {
   indefinida: { rotulo: 'Indefinida', cor: 'blue', leitura: 'Sem variação de preço não há o que medir.' },
 }
 
+const TIPOS_OFERTA = {
+  elastica: { rotulo: 'Elástica', cor: 'coral', leitura: 'A quantidade ofertada responde mais que o preço.' },
+  unitaria: { rotulo: 'Unitária', cor: 'mint', leitura: 'Quantidade ofertada e preço variam na mesma proporção.' },
+  inelastica: { rotulo: 'Inelástica', cor: 'blue', leitura: 'A quantidade ofertada responde menos que o preço.' },
+  indefinida: { rotulo: 'Indefinida', cor: 'blue', leitura: 'Sem variação de preço não há o que medir.' },
+}
+
+// As três medidas da aula, na ordem dos slides.
+const MEDIDAS = [
+  { id: 'preco', rotulo: 'Demanda', etiqueta: 'DEMANDA', dica: 'Elasticidade-preço da demanda: o que decide o efeito sobre a receita.' },
+  { id: 'oferta', rotulo: 'Oferta', etiqueta: 'OFERTA', dica: 'Elasticidade da oferta: a quantidade ofertada acompanha o preço.' },
+  { id: 'renda', rotulo: 'Renda', etiqueta: 'RENDA', dica: 'Elasticidade-renda: o sinal importa, e negativo é bem inferior.' },
+]
+
 // A medida de renda tem uma classe a mais: só nela o sinal negativo é resposta.
 const OPCOES_PRECO = ['elastica', 'unitaria', 'inelastica']
 const OPCOES_RENDA = ['elastica', 'unitaria', 'inelastica', 'inferior']
@@ -69,6 +84,7 @@ export default function LabElasticidades({ abrirDesafio = 0 }) {
   const [medida, setMedida] = useState('preco')
   const [tipoBem, setTipoBem] = useState('normal')
   const [variacaoRenda, setVariacaoRenda] = useState(20)
+  const [choqueProducao, setChoqueProducao] = useState(0)
   const [precoDe, setPrecoDe] = useState(DE_INICIAL)
   const [precoPara, setPrecoPara] = useState(PARA_INICIAL)
   const [secao, setSecao] = useState('conceito')
@@ -89,7 +105,63 @@ export default function LabElasticidades({ abrirDesafio = 0 }) {
     [tipoBem, variacaoRenda, precoDe],
   )
   const tipoRenda = classificarElasticidadeRenda(eRenda.valor)
-  const medindoRenda = medida === 'renda'
+
+  const eOferta = useMemo(
+    () => elasticidadeOferta(precoDe, precoPara, choqueProducao * EFEITO_PRODUCAO),
+    [precoDe, precoPara, choqueProducao],
+  )
+  const tipoOferta = classificarElasticidade(eOferta.valor)
+
+  // O que a tela mostra para cada medida, calculado uma vez. Com três medidas, um
+  // ternário em cada ponto do JSX ficaria ilegível.
+  const valorOuTraco = v => (Number.isFinite(v) ? num(v, 2) : '—')
+  const qtd = v => (Number.isFinite(v) ? v : 0)
+  const vistas = {
+    preco: {
+      status: { ...TIPOS[tipo], titulo: `Demanda ${TIPOS[tipo].rotulo.toLowerCase()}` },
+      base: { rotulo: 'Preço', valor: e.varPreco },
+      varQuantidade: qtd(e.varQuantidade),
+      legenda: 'A barra maior manda: quantidade maior que preço é demanda elástica.',
+      metricas: [
+        { rotulo: 'ELASTICIDADE-PREÇO', valor: valorOuTraco(e.valor), destaque: true },
+        { rotulo: 'RECEITA ANTES', valor: `R$ ${num(e.receitaDe)}`, unidade: 'mil' },
+        { rotulo: 'RECEITA DEPOIS', valor: `R$ ${num(e.receitaPara)}`, unidade: 'mil' },
+      ],
+      leitura: !Number.isFinite(e.valor)
+        ? 'Escolha dois preços diferentes para haver variação a medir.'
+        : `Subindo de R$ ${num(precoDe, 1)} para R$ ${num(precoPara, 1)}, o preço variou ${num(e.varPreco * 100, 1)}% e a quantidade ${num(e.varQuantidade * 100, 1)}% — elasticidade de ${num(e.valor, 2)}, demanda ${TIPOS[tipo].rotulo.toLowerCase()}. A receita ${variacaoReceita > 1 ? 'subiu' : variacaoReceita < -1 ? 'caiu' : 'ficou praticamente igual'}.`,
+    },
+    oferta: {
+      status: { ...TIPOS_OFERTA[tipoOferta], titulo: `Oferta ${TIPOS_OFERTA[tipoOferta].rotulo.toLowerCase()}` },
+      base: { rotulo: 'Preço', valor: eOferta.varPreco },
+      varQuantidade: qtd(eOferta.varQuantidade),
+      legenda: 'Barras para o mesmo lado, sempre: na oferta, preço e quantidade andam juntos. A maior manda.',
+      metricas: [
+        { rotulo: 'ELASTICIDADE DA OFERTA', valor: valorOuTraco(eOferta.valor), destaque: true },
+        { rotulo: 'OFERTADO ANTES', valor: num(eOferta.qDe), unidade: 'mil un.' },
+        { rotulo: 'OFERTADO DEPOIS', valor: num(eOferta.qPara), unidade: 'mil un.' },
+      ],
+      leitura: !Number.isFinite(eOferta.valor)
+        ? 'Escolha dois preços diferentes para haver variação a medir.'
+        : `Com o preço indo de R$ ${num(precoDe, 1)} para R$ ${num(precoPara, 1)}, a quantidade ofertada foi de ${num(eOferta.qDe)} para ${num(eOferta.qPara)} mil un. — elasticidade da oferta de ${num(eOferta.valor, 2)}, oferta ${TIPOS_OFERTA[tipoOferta].rotulo.toLowerCase()}. Mude as condições de produção e veja a classe mudar.`,
+    },
+    renda: {
+      status: { ...TIPOS_RENDA[tipoRenda], titulo: TIPOS_RENDA[tipoRenda].rotulo },
+      base: { rotulo: 'Renda', valor: eRenda.varRenda },
+      varQuantidade: qtd(eRenda.varQuantidade),
+      legenda: 'Barras para o mesmo lado: bem normal. Para lados opostos: bem inferior.',
+      metricas: [
+        { rotulo: 'ELASTICIDADE-RENDA', valor: valorOuTraco(eRenda.valor), destaque: true },
+        { rotulo: 'QUANTIDADE ANTES', valor: num(eRenda.qDe), unidade: 'mil un.' },
+        { rotulo: 'QUANTIDADE DEPOIS', valor: num(eRenda.qPara), unidade: 'mil un.' },
+      ],
+      leitura: !Number.isFinite(eRenda.valor)
+        ? 'Mova a renda para haver variação a medir.'
+        : `Com a renda variando ${num(eRenda.varRenda * 100, 0)}%, a quantidade foi de ${num(eRenda.qDe)} para ${num(eRenda.qPara)} mil un. — elasticidade-renda de ${num(eRenda.valor, 2)}. ${TIPOS_RENDA[tipoRenda].leitura}${tipoRenda === 'inferior' ? ' Numa recessão, este bem ganharia demanda.' : ''}`,
+    },
+  }
+  const vista = vistas[medida]
+  const medidaAtual = MEDIDAS.find(m => m.id === medida)
 
   const acertos = rodada.filter(caso => respostas[caso.id] === resolver(caso).tipo).length
   const rodadaCompleta = acertos === rodada.length
@@ -152,6 +224,23 @@ export default function LabElasticidades({ abrirDesafio = 0 }) {
           inelástica acontece o contrário. É por isso que a mesma promoção funciona num produto e
           quebra outro.
         </p>
+        <p>
+          Há dois <b>casos extremos</b>. Na demanda <b>perfeitamente inelástica</b> (E = 0), a
+          quantidade não muda com o preço: a curva é vertical. Na <b>perfeitamente elástica</b>
+          (E = ∞), a curva é horizontal num preço P1 — acima dele a quantidade demandada é zero,
+          nele assume qualquer valor, abaixo dele seria infinita.
+        </p>
+        <p>
+          O que torna a demanda mais ou menos elástica: a <b>disponibilidade de substitutos</b>, a
+          <b> essencialidade</b> do bem, o seu <b>peso no orçamento</b> e o <b>horizonte de
+          tempo</b> — com mais prazo, o consumidor encontra alternativas.
+        </p>
+        <p>
+          A mesma medida vale para a <b>oferta</b>: variação percentual da quantidade ofertada
+          sobre a do preço. Acima de 1 é elástica, igual a 1 unitária, abaixo de 1 inelástica. E a
+          <b> elasticidade-renda</b> troca o preço pela renda: aqui o sinal importa, e negativo
+          indica bem inferior.
+        </p>
         <button className="button primary" onClick={() => { setConceitoLido(true); irPara('laboratorio') }}>
           {conceitoLido ? 'Reler e ir ao laboratório' : 'Entendi, ir ao laboratório'} <span>→</span>
         </button>
@@ -164,21 +253,19 @@ export default function LabElasticidades({ abrirDesafio = 0 }) {
           <div className="panel-title"><span className="pulse"></span> DUAS OBSERVAÇÕES DO MERCADO</div>
 
           <div className="escolha-grupo">
-            <span className="escolha-rotulo">O que varia</span>
+            <span className="escolha-rotulo">Medida</span>
             <div className="escolha-botoes">
-              <button className={!medindoRenda ? 'escolha ativa' : 'escolha'}
-                      onClick={() => setMedida('preco')} aria-pressed={!medindoRenda}>Preço</button>
-              <button className={medindoRenda ? 'escolha ativa' : 'escolha'}
-                      onClick={() => setMedida('renda')} aria-pressed={medindoRenda}>Renda</button>
+              {MEDIDAS.map(m => (
+                <button key={m.id} className={medida === m.id ? 'escolha ativa' : 'escolha'}
+                        onClick={() => setMedida(m.id)} aria-pressed={medida === m.id}>
+                  {m.rotulo}
+                </button>
+              ))}
             </div>
-            <small>
-              {medindoRenda
-                ? 'Elasticidade-renda: o sinal importa, e negativo é bem inferior.'
-                : 'Elasticidade-preço: o que decide o efeito sobre a receita.'}
-            </small>
+            <small>{medidaAtual.dica}</small>
           </div>
 
-          {medindoRenda ? (
+          {medida === 'renda' ? (
             <>
               <div className="escolha-grupo">
                 <span className="escolha-rotulo">Tipo do bem</span>
@@ -197,26 +284,35 @@ export default function LabElasticidades({ abrirDesafio = 0 }) {
                 onChange={setVariacaoRenda} hint={`De ${num(eRenda.qDe)} para ${num(eRenda.qPara)} mil un.`}
               />
               <Slider
-                label="Preço praticado" value={precoDe} min={PRECO_MIN} max={PRECO_MAX_LAB} step={0.5}
+                label="Preço praticado" value={precoDe} exibicao={num(precoDe, 1)} min={PRECO_MIN} max={PRECO_MAX_LAB} step={0.5}
                 suffix=" R$" onChange={setPrecoDe} hint="Muda a base de quantidade, e com ela a elasticidade"
               />
             </>
           ) : (
             <>
               <Slider
-                label="Preço antes" value={precoDe} min={PRECO_MIN} max={PRECO_MAX_LAB} step={0.5}
-                suffix=" R$" onChange={setPrecoDe} hint={`Vendia ${num(e.qDe)} mil un.`}
+                label="Preço antes" value={precoDe} exibicao={num(precoDe, 1)} min={PRECO_MIN} max={PRECO_MAX_LAB} step={0.5}
+                suffix=" R$" onChange={setPrecoDe}
+                hint={medida === 'oferta' ? `Ofertava ${num(eOferta.qDe)} mil un.` : `Vendia ${num(e.qDe)} mil un.`}
               />
               <Slider
-                label="Preço depois" value={precoPara} min={PRECO_MIN} max={PRECO_MAX_LAB} step={0.5}
-                suffix=" R$" onChange={setPrecoPara} hint={`Passou a vender ${num(e.qPara)} mil un.`}
+                label="Preço depois" value={precoPara} exibicao={num(precoPara, 1)} min={PRECO_MIN} max={PRECO_MAX_LAB} step={0.5}
+                suffix=" R$" onChange={setPrecoPara}
+                hint={medida === 'oferta' ? `Passou a ofertar ${num(eOferta.qPara)} mil un.` : `Passou a vender ${num(e.qPara)} mil un.`}
               />
+              {medida === 'oferta' && (
+                <Slider
+                  label="Condições de produção" value={choqueProducao} min={-30} max={30} suffix="%"
+                  onChange={setChoqueProducao}
+                  hint="Muda a base de quantidade ofertada, e com ela a elasticidade"
+                />
+              )}
             </>
           )}
 
           <button className="reset" onClick={() => {
             setPrecoDe(DE_INICIAL); setPrecoPara(PARA_INICIAL)
-            setTipoBem('normal'); setVariacaoRenda(20)
+            setTipoBem('normal'); setVariacaoRenda(20); setChoqueProducao(0)
           }}>
             ↺ Restaurar cenário
           </button>
@@ -228,58 +324,26 @@ export default function LabElasticidades({ abrirDesafio = 0 }) {
               <span className="market-label">MERCADO DE CAFÉ</span>
               <h3>Quanto a quantidade responde</h3>
             </div>
-            <div className={`market-status ${medindoRenda ? TIPOS_RENDA[tipoRenda].cor : TIPOS[tipo].cor}`}>
-              <b>{medindoRenda ? TIPOS_RENDA[tipoRenda].rotulo : `Demanda ${TIPOS[tipo].rotulo.toLowerCase()}`}</b>
-              <span>{medindoRenda ? TIPOS_RENDA[tipoRenda].leitura : TIPOS[tipo].leitura}</span>
+            <div className={`market-status ${vista.status.cor}`}>
+              <b>{vista.status.titulo}</b>
+              <span>{vista.status.leitura}</span>
             </div>
           </div>
 
           <div className="barras">
-            <Barra rotulo={medindoRenda ? 'Renda' : 'Preço'} valor={medindoRenda ? eRenda.varRenda : e.varPreco} />
-            <Barra
-              rotulo="Quantidade"
-              valor={medindoRenda
-                ? (Number.isFinite(eRenda.varQuantidade) ? eRenda.varQuantidade : 0)
-                : (Number.isFinite(e.varQuantidade) ? e.varQuantidade : 0)}
-            />
-            <p className="barras-legenda">
-              {medindoRenda
-                ? 'Barras para o mesmo lado: bem normal. Para lados opostos: bem inferior.'
-                : 'A barra maior manda: quantidade maior que preço é demanda elástica.'}
-            </p>
+            <Barra rotulo={vista.base.rotulo} valor={vista.base.valor} />
+            <Barra rotulo="Quantidade" valor={vista.varQuantidade} />
+            <p className="barras-legenda">{vista.legenda}</p>
           </div>
 
-          {medindoRenda ? (
-            <div className="metric-row">
-              <div className="highlight">
-                <span>ELASTICIDADE-RENDA</span>
-                <strong>{Number.isFinite(eRenda.valor) ? num(eRenda.valor, 2) : '—'}</strong>
+          <div className="metric-row">
+            {vista.metricas.map(m => (
+              <div key={m.rotulo} className={m.destaque ? 'highlight' : undefined}>
+                <span>{m.rotulo}</span>
+                <strong>{m.valor}{m.unidade && <small> {m.unidade}</small>}</strong>
               </div>
-              <div>
-                <span>QUANTIDADE ANTES</span>
-                <strong>{num(eRenda.qDe)}<small> mil un.</small></strong>
-              </div>
-              <div>
-                <span>QUANTIDADE DEPOIS</span>
-                <strong>{num(eRenda.qPara)}<small> mil un.</small></strong>
-              </div>
-            </div>
-          ) : (
-            <div className="metric-row">
-              <div className="highlight">
-                <span>ELASTICIDADE-PREÇO</span>
-                <strong>{Number.isFinite(e.valor) ? num(e.valor, 2) : '—'}</strong>
-              </div>
-              <div>
-                <span>RECEITA ANTES</span>
-                <strong>R$ {num(e.receitaDe)}<small> mil</small></strong>
-              </div>
-              <div>
-                <span>RECEITA DEPOIS</span>
-                <strong>R$ {num(e.receitaPara)}<small> mil</small></strong>
-              </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </div>
 
@@ -292,13 +356,7 @@ export default function LabElasticidades({ abrirDesafio = 0 }) {
         <span className="spark">✦</span>
         <p>
           <b>Leitura do cenário:</b>{' '}
-          {medindoRenda
-            ? (!Number.isFinite(eRenda.valor)
-                ? 'Mova a renda para haver variação a medir.'
-                : `Com a renda variando ${num(eRenda.varRenda * 100, 0)}%, a quantidade foi de ${num(eRenda.qDe)} para ${num(eRenda.qPara)} mil un. — elasticidade-renda de ${num(eRenda.valor, 2)}. ${TIPOS_RENDA[tipoRenda].leitura}${tipoRenda === 'inferior' ? ' Numa recessão, este bem ganharia demanda.' : ''}`)
-            : !Number.isFinite(e.valor)
-            ? 'Escolha dois preços diferentes para haver variação a medir.'
-            : `Subindo de R$ ${num(precoDe, 1)} para R$ ${num(precoPara, 1)}, o preço variou ${num(e.varPreco * 100, 1)}% e a quantidade ${num(e.varQuantidade * 100, 1)}% — elasticidade de ${num(e.valor, 2)}, demanda ${TIPOS[tipo].rotulo.toLowerCase()}. A receita ${variacaoReceita > 1 ? 'subiu' : variacaoReceita < -1 ? 'caiu' : 'ficou praticamente igual'}.`}
+          {vista.leitura}
         </p>
       </div>
     </div>
@@ -318,8 +376,8 @@ function Desafio({ rodada, respostas, setRespostas, acertos, rodadas, completa, 
       </div>
       <p className="metas-intro">
         Os números são sorteados a cada rodada — não há gabarito para decorar. Dois casos medem
-        a resposta ao <b>preço</b> e dois à <b>renda</b>; repare que só nos de renda o sinal
-        negativo é uma resposta possível.
+        a <b>demanda</b>, dois a <b>oferta</b> e dois a <b>renda</b>; repare que só nos de renda o
+        sinal negativo é uma resposta possível.
       </p>
       <ul className="casos">
         {rodada.map(caso => {
@@ -328,11 +386,11 @@ function Desafio({ rodada, respostas, setRespostas, acertos, rodadas, completa, 
           const acertou = escolha === certo.tipo
           const deRenda = certo.medida === 'renda'
           const opcoes = deRenda ? OPCOES_RENDA : OPCOES_PRECO
-          const rotulos = deRenda ? TIPOS_RENDA : TIPOS
+          const rotulos = deRenda ? TIPOS_RENDA : certo.medida === 'oferta' ? TIPOS_OFERTA : TIPOS
           return (
             <li key={caso.id} className={escolha ? (acertou ? 'caso certo' : 'caso errado') : 'caso'}>
               <p>
-                <span className="caso-medida">{deRenda ? 'RENDA' : 'PREÇO'}</span>
+                <span className="caso-medida">{MEDIDAS.find(m => m.id === certo.medida).etiqueta}</span>
                 {enunciado(caso)}
               </p>
               <div className="caso-opcoes">

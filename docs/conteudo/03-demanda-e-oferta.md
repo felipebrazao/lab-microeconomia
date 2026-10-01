@@ -66,6 +66,7 @@ demanda — o caso que a leitura do cenário nomeia.
 Os coeficientes de cada tipo estão em `TIPOS_DE_BEM`, em `shared/modelo.js`. A teoria fixa só o
 sinal; o módulo do efeito do bem inferior é calibragem para o deslocamento ser legível.
 
-Não cobre:
-
-- **efeito renda e efeito substituição** nomeados como tais na interface
+O conceito (3.0) nomeia o **efeito renda** e o **efeito substituição** como as duas razões
+para a quantidade demandada responder ao preço, e define a **oferta** com seus determinantes.
+No laboratório os dois efeitos agem juntos no slider de preço do produto: o lab mostra o
+efeito total, sem decompor — a aula também não decompõe.

@@ -131,6 +131,34 @@ export function elasticidadePreco(precoDe, precoPara, deslocamento = 0) {
   }
 }
 
+// Elasticidade da oferta: quanto a quantidade OFERTADA responde, em %, para cada
+// 1% de variação no preço.
+//
+//   E = Var% Qs / Var% P
+//
+// Sai positiva, porque preço e quantidade ofertada andam no mesmo sentido. A
+// classificação é a mesma da elasticidade-preço — elástica acima de 1, unitária
+// em 1, inelástica abaixo —, então `classificarElasticidade` serve sem mudança.
+//
+// A curva de oferta do modelo corta o eixo da quantidade (12 mil un. a preço
+// zero), e uma reta assim é sempre inelástica. Por isso o deslocamento importa
+// aqui: é o choque de condições de produção que permite ao aluno chegar aos três
+// casos que a aula classifica.
+export function elasticidadeOferta(precoDe, precoPara, deslocamento = 0) {
+  const qDe = oferta(precoDe, deslocamento)
+  const qPara = oferta(precoPara, deslocamento)
+  const varPreco = variacao(precoDe, precoPara)
+  const varQuantidade = qDe === 0 ? NaN : variacao(qDe, qPara)
+
+  return {
+    qDe,
+    qPara,
+    varPreco,
+    varQuantidade,
+    valor: varPreco === 0 || qDe === 0 ? NaN : varQuantidade / varPreco,
+  }
+}
+
 // Faixa em torno de 1 tratada como elasticidade unitária. Sem ela o caso
 // unitário seria inalcançável na prática: exigiria acertar o valor exato.
 export const TOLERANCIA_UNITARIA = 0.05

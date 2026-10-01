@@ -48,18 +48,28 @@ processamento é concentrado.
 Produtos podem ser homogêneos ou diferenciados, e a entrada é difícil.
 
 **Cartel** — agrupamento de empresas que limita a livre concorrência para fixar preço comum
-ou maximizar lucros em conjunto. É ilegal no Brasil: a Lei nº 12.529/2011 trata o abuso de
-poder econômico como crime, e o CADE é a autoridade de defesa da concorrência.
+ou maximizar lucros em conjunto. É crime contra a ordem econômica no Brasil (Lei nº
+8.137/1990, art. 4º, com redação dada pela Lei nº 12.529/2011), e o CADE é a autoridade de
+defesa da concorrência.
 
 Duas formas de concentração aparecem aqui:
 
 - **horizontal** — entre agentes que ofertam produtos substitutos entre si
 - **vertical** — entre agentes em etapas diferentes da mesma cadeia produtiva
 
+## Duopólio
+
+Caso particular do oligopólio com **apenas duas empresas vendedoras**. Para evitar tensão
+entre as duas, é comum que entrem em acordo para estabelecer preços.
+
 ## Oligopsônio
 
 **Poucas empresas compradoras** e muitas vendedoras. Como no monopsônio, o poder está do lado
 da demanda, só que dividido entre alguns.
+
+## Duopsônio
+
+O inverso do duopólio: **apenas duas empresas compradoras** diante de muitas vendedoras.
 
 ## Concorrência monopolista
 
@@ -79,8 +89,10 @@ mas a livre entrada impede que essa margem se sustente indefinidamente.
 | Concorrência perfeita | muitos | muitos | livre | nenhum |
 | Concorrência monopolista | muitos | muitos | livre | pequeno, via diferenciação |
 | Oligopólio | poucos | muitos | difícil | alto, do lado da venda |
+| Duopólio | dois | muitos | difícil | alto, do lado da venda, com acordo de preços comum |
 | Monopólio | um | muitos | bloqueada | total, do lado da venda |
 | Oligopsônio | muitos | poucos | difícil | alto, do lado da compra |
+| Duopsônio | muitos | dois | difícil | alto, do lado da compra |
 | Monopsônio | muitos | um | bloqueada | total, do lado da compra |
 
 ## Estado no MicroLab
@@ -89,14 +101,18 @@ mas a livre entrada impede que essa margem se sustente indefinidamente.
 
 A manipulação é classificatória, como previsto: o aluno monta a combinação dos três
 determinantes — quantos vendem, quantos compram, produto homogêneo ou diferenciado — e a
-matriz acende a célula correspondente. Não há gráfico.
+matriz acende a célula correspondente. Não há gráfico. A contagem de cada lado vai de um a
+muitos passando por **dois**, para duopólio e duopsônio terem célula própria: a matriz é 4 × 4.
 
 Trocar apenas a diferenciação leva de concorrência perfeita a monopolista, que é justamente o
 que separa as duas.
 
-**Limite declarado:** concentração simultânea dos dois lados (um ou poucos vendedores *e* um
-ou poucos compradores) fica marcada como fora do recorte, sem nome. A ementa trata
+**Limite declarado:** concentração simultânea dos dois lados (um, dois ou poucos vendedores
+*e* um, dois ou poucos compradores) fica marcada como fora do recorte, sem nome. A ementa trata
 concentração de um lado por vez, e inventar rótulo ali ensinaria o que a aula não deu.
+
+Cartel e concentração horizontal e vertical estão no conceito (6.0), como texto: não são
+combinações de determinantes, então não têm célula na matriz.
 
 O desafio sorteia mercados descritos pelos determinantes, sem citar setores reais — como a
 estrutura é sorteada, um setor real não acompanharia e o enunciado afirmaria algo falso.

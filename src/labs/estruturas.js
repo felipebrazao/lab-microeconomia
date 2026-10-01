@@ -7,7 +7,7 @@
 // Concorrência perfeita e monopolista têm a mesma contagem dos dois lados; o
 // que as separa é só a diferenciação do produto.
 
-export const QUANTIDADES = ['um', 'poucos', 'muitos']
+export const QUANTIDADES = ['um', 'dois', 'poucos', 'muitos']
 
 export const ESTRUTURAS = {
   'concorrencia-perfeita': {
@@ -25,6 +25,11 @@ export const ESTRUTURAS = {
     poder: 'Alto, do lado da venda.',
     tracos: ['poucos vendedores', 'muitos compradores', 'entrada difícil', 'risco de cartel'],
   },
+  duopolio: {
+    nome: 'Duopólio',
+    poder: 'Alto, do lado da venda — e as duas costumam combinar o preço.',
+    tracos: ['duas empresas vendedoras', 'muitos compradores', 'acordo de preços é comum'],
+  },
   monopolio: {
     nome: 'Monopólio',
     poder: 'Total, do lado da venda.',
@@ -34,6 +39,11 @@ export const ESTRUTURAS = {
     nome: 'Oligopsônio',
     poder: 'Alto, do lado da compra.',
     tracos: ['muitos vendedores', 'poucos compradores', 'quem compra influencia o preço'],
+  },
+  duopsonio: {
+    nome: 'Duopsônio',
+    poder: 'Alto, do lado da compra.',
+    tracos: ['muitos vendedores', 'duas empresas compradoras', 'quem compra influencia o preço'],
   },
   monopsonio: {
     nome: 'Monopsônio',
@@ -53,10 +63,12 @@ export function classificar({ vendedores, compradores, diferenciado }) {
   }
   if (compradores === 'muitos') {
     if (vendedores === 'um') return 'monopolio'
+    if (vendedores === 'dois') return 'duopolio'
     if (vendedores === 'poucos') return 'oligopolio'
   }
   if (vendedores === 'muitos') {
     if (compradores === 'um') return 'monopsonio'
+    if (compradores === 'dois') return 'duopsonio'
     if (compradores === 'poucos') return 'oligopsonio'
   }
   return FORA_DO_RECORTE
@@ -76,8 +88,10 @@ export const DETERMINANTES = {
   'concorrencia-perfeita': { vendedores: 'muitos', compradores: 'muitos', diferenciado: false },
   'concorrencia-monopolista': { vendedores: 'muitos', compradores: 'muitos', diferenciado: true },
   oligopolio: { vendedores: 'poucos', compradores: 'muitos', diferenciado: false },
+  duopolio: { vendedores: 'dois', compradores: 'muitos', diferenciado: false },
   monopolio: { vendedores: 'um', compradores: 'muitos', diferenciado: false },
   oligopsonio: { vendedores: 'muitos', compradores: 'poucos', diferenciado: false },
+  duopsonio: { vendedores: 'muitos', compradores: 'dois', diferenciado: false },
   monopsonio: { vendedores: 'muitos', compradores: 'um', diferenciado: false },
 }
 
@@ -86,19 +100,21 @@ export const DETERMINANTES = {
 // "uma única empresa vendem".
 const VENDEM = {
   um: 'uma única empresa vende',
+  dois: 'apenas duas empresas vendem',
   poucos: 'poucas empresas vendem',
   muitos: 'muitas empresas vendem',
 }
 
 const COMPRAM = {
   um: 'um único comprador',
+  dois: 'apenas dois compradores',
   poucos: 'poucos compradores',
   muitos: 'muitos compradores',
 }
 
 export function enunciado({ vendedores, compradores, diferenciado }) {
   const entrada = vendedores === 'muitos' ? 'a entrada de novos concorrentes é livre'
-    : vendedores === 'poucos' ? 'entrar neste mercado é difícil'
+    : vendedores === 'poucos' || vendedores === 'dois' ? 'entrar neste mercado é difícil'
     : 'há barreiras que impedem a entrada de novas empresas'
   const produto = vendedores === 'muitos' && compradores === 'muitos'
     ? (diferenciado ? ', cada uma com um produto diferenciado,' : ', todas com produtos idênticos,')

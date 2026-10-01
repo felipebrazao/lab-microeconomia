@@ -12,7 +12,7 @@ const SECOES = [
   { id: 'desafio', numero: '6.2', titulo: 'Desafio' },
 ]
 
-const ROTULO = { um: 'Um', poucos: 'Poucos', muitos: 'Muitos' }
+const ROTULO = { um: 'Um', dois: 'Dois', poucos: 'Poucos', muitos: 'Muitos' }
 const OPCOES = Object.keys(ESTRUTURAS)
 
 export default function LabEstruturas({ abrirDesafio = 0 }) {
@@ -81,10 +81,22 @@ export default function LabEstruturas({ abrirDesafio = 0 }) {
           <b> compra</b>, monopsônio e oligopsônio — o espelho, em que quem compra dita o preço.
         </p>
         <p>
+          Com exatamente duas empresas, o oligopólio vira <b>duopólio</b>: para evitar tensão entre
+          as duas, é comum que combinem o preço. O inverso, duas empresas compradoras diante de
+          muitas vendedoras, é o <b>duopsônio</b>.
+        </p>
+        <p>
           Com muitos dos dois lados, o que separa <b>concorrência perfeita</b> de <b>concorrência
           monopolista</b> é só o produto: idêntico numa, diferenciado na outra. É essa
           diferenciação que dá à empresa alguma margem sobre o próprio preço — margem que a livre
           entrada depois corrói.
+        </p>
+        <p>
+          Quando empresas se juntam para fixar um preço comum e limitar a concorrência, formam um
+          <b> cartel</b> — no Brasil, crime contra a ordem econômica (Lei 8.137/1990, com redação da
+          Lei 12.529/2011). A concentração também pode vir de operações entre empresas: a
+          <b> concentração horizontal</b> une agentes que ofertam produtos substitutos entre si; a
+          <b> vertical</b>, agentes de etapas diferentes da mesma cadeia produtiva.
         </p>
         <button className="button primary" onClick={() => { setConceitoLido(true); irPara('laboratorio') }}>
           {conceitoLido ? 'Reler e ir ao laboratório' : 'Entendi, ir ao laboratório'} <span>→</span>
@@ -103,7 +115,7 @@ export default function LabEstruturas({ abrirDesafio = 0 }) {
 
           <div className="escolha-grupo">
             <span className="escolha-rotulo">Quantos vendem</span>
-            <div className="escolha-botoes">
+            <div className="escolha-botoes em-grade">
               {QUANTIDADES.map(q => (
                 <button key={q} className={vendedores === q ? 'escolha ativa' : 'escolha'}
                         onClick={() => setVendedores(q)} aria-pressed={vendedores === q}>
@@ -115,7 +127,7 @@ export default function LabEstruturas({ abrirDesafio = 0 }) {
 
           <div className="escolha-grupo">
             <span className="escolha-rotulo">Quantos compram</span>
-            <div className="escolha-botoes">
+            <div className="escolha-botoes em-grade">
               {QUANTIDADES.map(q => (
                 <button key={q} className={compradores === q ? 'escolha ativa' : 'escolha'}
                         onClick={() => setCompradores(q)} aria-pressed={compradores === q}>

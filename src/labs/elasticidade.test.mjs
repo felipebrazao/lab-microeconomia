@@ -2,8 +2,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { elasticidadePreco, classificarElasticidade, precoChoke } from '../shared/modelo.js'
 import {
-  gerarCaso, gerarCasoRenda, gerarRodada, resolver, enunciado,
-  TIPOS_SORTEAVEIS, TIPOS_RENDA_SORTEAVEIS,
+  gerarCaso, gerarCasoRenda, gerarCasoOferta, gerarRodada, resolver, enunciado,
+  TIPOS_SORTEAVEIS, TIPOS_RENDA_SORTEAVEIS, TIPOS_OFERTA_SORTEAVEIS,
 } from './casos-elasticidade.js'
 
 // Gerador pseudoaleatório determinístico. Um rng CONSTANTE faria `sortear`
@@ -94,17 +94,34 @@ test('bem inferior é sorteável, e só na medida de renda', () => {
     'renda e quantidade andam em sentidos opostos')
 })
 
-test('uma rodada cobre as duas medidas, sem repetir tipo dentro de cada uma', () => {
+test('todo caso de oferta gerado é válido e do tipo pedido', () => {
+  assert.deepEqual([...TIPOS_OFERTA_SORTEAVEIS].sort(), ['elastica', 'inelastica', 'unitaria'])
+  for (const tipo of TIPOS_OFERTA_SORTEAVEIS) {
+    for (let i = 0; i < 300; i++) {
+      const caso = gerarCasoOferta(tipo, rngSemente(i + 1))
+      const r = resolver(caso)
+
+      assert.equal(r.medida, 'oferta')
+      assert.equal(r.tipo, tipo, `pediu ${tipo} e veio ${r.tipo} (E=${r.valor})`)
+      assert.ok(r.valor > 0, 'na oferta, preço e quantidade andam no mesmo sentido')
+      assert.ok(Number.isInteger(caso.precoPara) && caso.precoPara > 0)
+      assert.ok(Number.isInteger(caso.qPara) && caso.qPara > 0)
+      assert.ok(enunciado(caso).includes('ofertad'), `enunciado de oferta sem a palavra: ${enunciado(caso)}`)
+    }
+  }
+})
+
+test('uma rodada cobre as três medidas da aula, sem repetir tipo dentro de cada uma', () => {
   for (let i = 0; i < 200; i++) {
     const rodada = gerarRodada(rngSemente(i + 1))
-    assert.equal(rodada.length, 4)
+    assert.equal(rodada.length, 6)
 
-    const porMedida = { preco: [], renda: [] }
+    const porMedida = { preco: [], oferta: [], renda: [] }
     for (const caso of rodada) porMedida[resolver(caso).medida].push(resolver(caso).tipo)
 
-    assert.equal(porMedida.preco.length, 2, 'faltou caso de elasticidade-preço')
-    assert.equal(porMedida.renda.length, 2, 'faltou caso de elasticidade-renda')
-    assert.equal(new Set(porMedida.preco).size, 2, `repetiu tipo de preço: ${porMedida.preco}`)
-    assert.equal(new Set(porMedida.renda).size, 2, `repetiu tipo de renda: ${porMedida.renda}`)
+    for (const medida of ['preco', 'oferta', 'renda']) {
+      assert.equal(porMedida[medida].length, 2, `faltou caso de ${medida}`)
+      assert.equal(new Set(porMedida[medida]).size, 2, `repetiu tipo em ${medida}: ${porMedida[medida]}`)
+    }
   }
 })

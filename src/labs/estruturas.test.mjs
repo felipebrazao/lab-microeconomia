@@ -48,8 +48,10 @@ test('concentração dos dois lados fica fora do recorte da disciplina', () => {
       }
     }
   }
-  // um/um, um/poucos, poucos/um, poucos/poucos
-  assert.deepEqual(foraDoRecorte.sort(), ['poucos/poucos', 'poucos/um', 'um/poucos', 'um/um'])
+  // todas as combinações de um, dois e poucos dos dois lados
+  const concentrados = ['um', 'dois', 'poucos']
+  const esperado = concentrados.flatMap(v => concentrados.map(c => `${v}/${c}`))
+  assert.deepEqual(foraDoRecorte.sort(), esperado.sort())
 })
 
 // O gerador substitui a revisão humana de cada enunciado: confere que o gabarito
@@ -62,7 +64,7 @@ test('todo caso gerado tem gabarito coerente com a regra', () => {
     assert.notEqual(caso.estrutura, FORA_DO_RECORTE, 'caso sem resposta não pode ser perguntado')
     // guarda de concordância: o app é em pt-BR e o enunciado é lido pelo aluno
     const texto = enunciado(caso.determinantes)
-    for (const erro of ['poucas compradores', 'muitas compradores', 'uma única empresa vendem',
+    for (const erro of ['poucas compradores', 'muitas compradores', 'duas compradores', 'uma única empresa vendem',
                         'empresas vende ', 'para uma única empresa']) {
       assert.ok(!texto.includes(erro), `concordância quebrada ("${erro}"): ${texto}`)
     }

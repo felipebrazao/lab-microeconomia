@@ -69,7 +69,7 @@ const TEMAS = [
     id: 'elasticidades',
     desafio: {
       titulo: <>A quantidade responde<br />mais ou menos?</>,
-      texto: 'Quatro casos por rodada: dois medem a resposta ao preço e dois à renda. Só nos de renda o sinal negativo é resposta.',
+      texto: 'Seis casos por rodada: dois de demanda, dois de oferta e dois de renda. Só nos de renda o sinal negativo é resposta.',
     },
     numero: '05',
     aba: 'Elasticidades',

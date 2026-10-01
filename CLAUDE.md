@@ -114,6 +114,8 @@ src/
     equilibrio.jsx            # tema 4 — equilíbrio de mercado
     metas-equilibrio.js       # metas do desafio do tema 4 (predicados puros)
     metas-equilibrio.test.mjs
+    cenarios-equilibrio.js    # os quatro casos da aula do tema 4
+    cenarios-equilibrio.test.mjs
     elasticidades.jsx         # tema 5 — elasticidades
     casos-elasticidade.js     # gerador dos casos do desafio do tema 5
     elasticidade.test.mjs

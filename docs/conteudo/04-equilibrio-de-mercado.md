@@ -34,6 +34,10 @@ Um deslocamento de curva move o ponto de equilíbrio. Os quatro casos:
 | Demanda aumenta (renda, sazonalidade, moda) | demanda → direita | sobe | sobe |
 | Demanda diminui (fim de sazonalidade) | demanda → esquerda | cai | cai |
 
+A aula ilustra cada caso com uma situação: **supersafra de soja** (oferta aumenta),
+**estiagem no café** (oferta diminui), **pato antes do Círio**, em Belém (demanda aumenta), e
+**ovos de chocolate depois da Páscoa** (demanda diminui).
+
 Vale insistir: nos quatro casos **a curva se move**, o ponto não desliza sobre ela. Confundir
 os dois é o erro mais comum do tema.
 
@@ -50,5 +54,9 @@ O desafio pede quatro estados verificados no próprio laboratório: equilibrar, 
 provocar escassez e encontrar o novo equilíbrio depois de deslocar uma curva. Avalia o que o
 aluno fez, não o que lembrou.
 
-Possível evolução: **cenários prontos** para os quatro casos da tabela acima, em vez de o
-aluno ter de montar cada um no slider.
+Os quatro casos da aula são **botões** no laboratório (`labs/cenarios-equilibrio.js`). Cada
+um põe o preço no equilíbrio de antes do choque e aplica um choque de 25% na curva do caso,
+com a outra de volta ao lugar: o aluno vê a folga se abrir e pode deixar o mercado ajustar.
+O choque cai nas curvas do mercado do lab — o que se compara é a **direção** de preço e
+quantidade, não os números de cada mercado. Um teste fixa que o modelo move os dois na
+direção que o texto de cada caso anuncia. Mexer num slider de choque desfaz o cenário.

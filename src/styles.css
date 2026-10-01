@@ -1195,6 +1195,49 @@ footer b {
   margin-top: 12px;
 }
 
+/* Figura estática do conceito do tema 1: duas fronteiras de produção */
+.fpp {
+  max-width: 420px;
+  margin: 4px 0 18px;
+}
+
+.fpp svg {
+  width: 100%;
+  height: auto;
+}
+
+.fpp figcaption {
+  font: 10px 'DM Mono', monospace;
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+
+.fpp-linha {
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.fpp-linha.a {
+  stroke: var(--teal);
+}
+
+.fpp-linha.b {
+  stroke: var(--coral);
+}
+
+.fpp-nome {
+  font: 9px 'DM Mono', monospace;
+  letter-spacing: .08em;
+}
+
+.fpp-nome.a {
+  fill: var(--teal);
+}
+
+.fpp-nome.b {
+  fill: var(--coral);
+}
+
 /* Seção 4.2 — metas verificadas no estado do laboratório */
 .metas {
   max-width: 1120px;
@@ -1692,6 +1735,13 @@ footer b {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+/* Quatro opções em 2 × 2: no flex, a quarta cairia sozinha na segunda linha.
+   Usado nos casos da aula (tema 4) e nas contagens de agentes (tema 6). */
+.escolha-botoes.em-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .escolha {
