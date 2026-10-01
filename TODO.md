@@ -22,50 +22,6 @@ Decidir o que sai dele e o que fica é decisão de conteúdo didático — combi
 
 ## UI e layout
 
-### Rótulo dos cards de conceito sobrepõe o parágrafo
-**Pré-existente**, presente desde o commit inicial `b18feeb`. Não introduzido pela
-migração para `labs/` + `shared/`.
-
-`.concept-card small` é `position: absolute; bottom: 24px`, ou seja, fora do fluxo: não
-empurra nada e nada o empurra. A altura do card vem de `min-height` fixo, não do
-conteúdo. O espaço entre o fim do parágrafo e o rótulo é, portanto, um resíduo — o que
-sobra de uma altura fixa menos um texto que cresce livre. Quando o texto cresce o
-bastante, o resíduo fica negativo e um passa por cima do outro.
-
-Folga medida entre o fim do `<p>` e o topo do `<small>`:
-
-| Viewport | Colunas | Card | `min-height` | Linhas | Folga |
-|---|---|---|---|---|---|
-| 1265 | 4 | 238px | 294px | 5 | +7px |
-| 785 | 2 | 335px | 294px | 3 | +50px |
-| 575 | 2 | 246px | 294px | 4 | +29px |
-| 546 | 1 | 468px | 240px | 2 | +18px |
-| 450 | 1 | 386px | 240px | 3 | **−4px** |
-| 375 | 1 | 321px | 240px | 3–4 | **−4 a −12px** |
-
-Dois pontos:
-
-1. Abaixo de 560px o `min-height` cai de 294px para 240px, mas o conteúdo não encolhe
-   junto. O que sobra comporta exatamente **duas** linhas de parágrafo — da terceira em
-   diante, sobrepõe.
-2. No desktop a folga é de **7px**. Não está quebrado, mas está a 7 pixels de quebrar:
-   uma frase mais longa num card futuro, o fallback da fonte do Google Fonts, ou fonte-base
-   maior no navegador do aluno já bastam.
-
-Correção proposta — trazer o rótulo para o fluxo em vez de flutuá-lo:
-
-```css
-.concept-card { display: flex; flex-direction: column; }
-.concept-card small { position: static; margin-top: auto; }
-```
-
-O `margin-top: auto` mantém o rótulo colado no rodapé quando há espaço, mas, por estar
-no fluxo, passa a ser intransponível e o card cresce se o texto exigir. Elimina a classe
-inteira do problema, em vez de recalibrar o `min-height` — o que só empurraria o limite
-para outro tamanho de tela.
-
-Efeito colateral: o card deixa de ter altura fixa em alguns casos.
-
 ### Botão "Marcar resumo como lido" não faz nada
 `src/main.jsx` — `briefDone`, do commit inicial `b18feeb`.
 

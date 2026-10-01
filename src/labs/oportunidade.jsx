@@ -216,11 +216,11 @@ export default function LabOportunidade({ abrirDesafio = 0 }) {
                   <button onClick={() => setEscolhidaId(alt.id)} aria-pressed={escolhida}>
                     <span className="alt-marca" aria-hidden="true">{escolhida ? '●' : '○'}</span>
                     <span className="alt-uso">{alt.uso}</span>
+                    {escolhida && <span className="alt-tag">escolhida</span>}
+                    {sacrificada && <span className="alt-tag sacrificio">melhor abandonada</span>}
                     <span className="alt-valor">R$ {alt.valor}</span>
                   </button>
                   <div className="alt-barra"><i style={{ width: `${(alt.valor / VALOR_MAX) * 100}%` }} /></div>
-                  {escolhida && <span className="alt-tag">escolhida</span>}
-                  {sacrificada && <span className="alt-tag sacrificio">melhor abandonada</span>}
                 </li>
               )
             })}
